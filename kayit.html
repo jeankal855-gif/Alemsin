@@ -1,0 +1,234 @@
+```html
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alemsin - Kayıt Ol</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;display:flex;
+  justify-content:center;align-items:center;
+  background:#101322;color:white;
+  font-family:Arial,sans-serif;padding:20px
+}
+.kutu{
+  width:100%;max-width:390px;padding:28px;
+  background:#1b2035;border-radius:18px;
+  box-shadow:0 0 25px #0006
+}
+h1{text-align:center;color:#858bff;margin-top:0}
+.alt{text-align:center;color:#c5c8dc}
+input:not([type=checkbox]){
+  width:100%;padding:13px;margin:8px 0;
+  border:1px solid #424966;border-radius:8px;
+  background:#101322;color:white;font-size:16px
+}
+.cinsiyet-baslik{margin-top:15px;margin-bottom:10px;font-weight:bold}
+.cinsiyetler{display:flex;gap:12px}
+.cinsiyet{
+  flex:1;padding:13px;border:2px solid #424966;
+  border-radius:10px;background:#101322;color:white;
+  cursor:pointer;font-size:16px;font-weight:bold
+}
+.cinsiyet.kadin.secili{
+  background:#4b2344;border-color:#ff72bd;color:#ff9bd0
+}
+.cinsiyet.erkek.secili{
+  background:#203c66;border-color:#65a9ff;color:#8bc4ff
+}
+button.genel{
+  width:100%;padding:13px;margin-top:12px;border:0;
+  border-radius:8px;background:#737bff;color:white;
+  font-size:16px;font-weight:bold;cursor:pointer
+}
+.sozlesme{display:flex;align-items:center;gap:10px;margin-top:18px;font-size:14px}
+.sozlesme input{width:18px;height:18px}
+#mesaj{margin-top:15px;text-align:center;font-size:14px;line-height:1.5}
+a{color:#a7adff}
+#pencere{
+  display:none;position:fixed;inset:0;background:#000b;
+  padding:20px;justify-content:center;align-items:center
+}
+.ic{
+  max-width:500px;width:100%;max-height:80vh;overflow:auto;
+  background:#1b2035;padding:25px;border-radius:14px;line-height:1.6
+}
+</style>
+</head>
+
+<body>
+<div class="kutu">
+  <h1>ALEMSİN</h1>
+  <p class="alt">Yeni hesap oluştur</p>
+
+  <form id="form">
+    <input id="nik" type="text"
+      placeholder="Nik (3-20 karakter)"
+      minlength="3" maxlength="20"
+      pattern="[A-Za-z0-9_]+"
+      title="Nik yalnızca harf, rakam ve alt çizgi içerebilir."
+      autocomplete="username" required>
+
+    <div class="cinsiyet-baslik">Cinsiyetini seç</div>
+    <div class="cinsiyetler">
+      <button type="button" class="cinsiyet kadin"
+        data-cinsiyet="Kadın" aria-pressed="false">♀ Kadın</button>
+      <button type="button" class="cinsiyet erkek"
+        data-cinsiyet="Erkek" aria-pressed="false">♂ Erkek</button>
+    </div>
+
+    <input id="sifre" type="password"
+      placeholder="Şifre (5-15 karakter)"
+      minlength="5" maxlength="15"
+      autocomplete="new-password" required>
+
+    <input id="tekrar" type="password"
+      placeholder="Şifre tekrar"
+      minlength="5" maxlength="15"
+      autocomplete="new-password" required>
+
+    <div class="sozlesme">
+      <input id="kabul" type="checkbox" required>
+      <label for="kabul">Kullanım sözleşmesini kabul ediyorum.</label>
+    </div>
+
+    <button type="button" class="genel" id="oku">SÖZLEŞMEYİ OKU</button>
+    <button type="submit" class="genel">KAYIT OL</button>
+  </form>
+
+  <div id="mesaj" role="status" aria-live="polite"></div>
+  <p class="alt"><a href="./index.html">Giriş sayfasına dön</a></p>
+</div>
+
+<div id="pencere">
+  <div class="ic">
+    <h2>Kullanım Sözleşmesi</h2>
+    <p>Diğer kullanıcılara saygılı davranmayı; hakaret, tehdit, taciz ve yasa dışı faaliyetlerde bulunmamayı kabul edersin. Başkalarının kişisel bilgilerini izinsiz paylaşmamalısın. Kuralları ihlal eden hesaplar sınırlandırılabilir veya kapatılabilir.</p>
+    <p>Bu örnek sözleşme, gerçek kullanım öncesinde uygun gizlilik ve hukuki metinlerle tamamlanmalıdır.</p>
+    <button type="button" class="genel" id="kapat">KAPAT</button>
+  </div>
+</div>
+
+<script>
+const form = document.getElementById("form");
+const mesaj = document.getElementById("mesaj");
+const pencere = document.getElementById("pencere");
+let secilenCinsiyet = "";
+
+function uyar(metin, basari = false) {
+  mesaj.textContent = metin;
+  mesaj.style.color = basari ? "#8cffb0" : "#ff8585";
+}
+
+document.querySelectorAll(".cinsiyet").forEach(buton => {
+  buton.addEventListener("click", () => {
+    secilenCinsiyet = buton.dataset.cinsiyet;
+
+    document.querySelectorAll(".cinsiyet").forEach(b => {
+      const secili = b === buton;
+      b.classList.toggle("secili", secili);
+      b.setAttribute("aria-pressed", String(secili));
+    });
+
+    uyar("");
+  });
+});
+
+document.getElementById("oku").onclick = () => {
+  pencere.style.display = "flex";
+};
+document.getElementById("kapat").onclick = () => {
+  pencere.style.display = "none";
+};
+pencere.onclick = e => {
+  if (e.target === pencere) pencere.style.display = "none";
+};
+
+form.onsubmit = e => {
+  e.preventDefault();
+
+  const nik = document.getElementById("nik").value.trim();
+  const sifre = document.getElementById("sifre").value;
+  const tekrar = document.getElementById("tekrar").value;
+  const kabul = document.getElementById("kabul").checked;
+
+  if (!/^[A-Za-z0-9_]{3,20}$/.test(nik)) {
+    uyar("Nik 3-20 karakter olmalı. Harf, rakam ve alt çizgi kullanabilirsin.");
+    return;
+  }
+
+  if (!secilenCinsiyet) {
+    uyar("Lütfen Kadın veya Erkek seç.");
+    return;
+  }
+
+  if (sifre.length < 5 || sifre.length > 15) {
+    uyar("Şifren en az 5, en fazla 15 karakter olmalı.");
+    return;
+  }
+
+  if (sifre !== tekrar) {
+    uyar("Girdiğin iki şifre aynı değil. Lütfen tekrar kontrol et.");
+    return;
+  }
+
+  if (!kabul) {
+    uyar("Kayıt olmak için kullanım sözleşmesini kabul etmelisin.");
+    return;
+  }
+
+  let kullanicilar = {};
+  let profiller = {};
+
+  try {
+    kullanicilar = JSON.parse(localStorage.getItem("Alemsin_users") || "{}");
+    profiller = JSON.parse(localStorage.getItem("Alemsin_profiles") || "{}");
+
+    if (!kullanicilar || typeof kullanicilar !== "object" || Array.isArray(kullanicilar)) {
+      uyar("Kullanıcı kayıtları okunamadı.");
+      return;
+    }
+    if (!profiller || typeof profiller !== "object" || Array.isArray(profiller)) {
+      uyar("Profil kayıtları okunamadı.");
+      return;
+    }
+  } catch {
+    uyar("Kayıt bilgileri okunamadı. Tarayıcı verilerini kontrol et.");
+    return;
+  }
+
+  const anahtar = nik.toLowerCase();
+
+  if (kullanicilar[anahtar]) {
+    uyar("Bu nik daha önce alınmış. Lütfen başka bir nik seç.");
+    return;
+  }
+
+  kullanicilar[anahtar] = sifre;
+  profiller[anahtar] = {
+    ...(profiller[anahtar] || {}),
+    nik: nik,
+    cinsiyet: secilenCinsiyet,
+    sozlesmeKabul: true,
+    kayitTarihi: new Date().toISOString()
+  };
+
+  try {
+    localStorage.setItem("Alemsin_users", JSON.stringify(kullanicilar));
+    localStorage.setItem("Alemsin_profiles", JSON.stringify(profiller));
+  } catch {
+    uyar("Kayıt kaydedilemedi. Tarayıcının depolama alanını kontrol et.");
+    return;
+  }
+
+  uyar("Kaydın başarıyla oluşturuldu! Giriş sayfasına yönlendiriliyorsun.", true);
+  form.querySelectorAll("button").forEach(b => b.disabled = true);
+  setTimeout(() => window.location.href = "./index.html", 1500);
+};
+</script>
+</body>
+</html>
+```

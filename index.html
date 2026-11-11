@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alemsin | Giriş</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;display:grid;place-items:center;
+  padding:20px;font-family:Arial,sans-serif;color:white;
+  background:linear-gradient(135deg,#17112f,#6336a4)
+}
+.card{
+  width:100%;max-width:390px;padding:30px;background:#21183d;
+  border:1px solid #66518d;border-radius:18px;text-align:center;
+  box-shadow:0 10px 35px #0005
+}
+h1{color:#d7b8ff}
+input,button{
+  width:100%;padding:13px;margin-top:12px;border-radius:9px;font-size:16px
+}
+input{background:#17112b;color:white;border:1px solid #66518d}
+button{border:0;background:#b58aff;color:#21183d;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.6}
+.guest-button{background:#493765;color:white}
+a{display:inline-block;margin-top:20px;color:#d7b8ff}
+#notice{color:#ffd5a0;overflow-wrap:anywhere;line-height:1.5;font-size:14px}
+#passwordArea,#genderArea{display:none}
+.gender-buttons{display:flex;gap:10px}
+.gender-buttons button{flex:1}
+#genderArea p{font-size:14px;line-height:1.5;color:#d7c9f0}
+</style>
+</head>
+<body>
+<main class="card">
+  <h1>💜 Alemsin</h1>
+  <p>Arkadaşlık burada başlar!</p>
+
+  <form id="loginForm">
+    <input id="nick" type="text" minlength="3" maxlength="20"
+      pattern="[A-Za-z0-9_]+"
+      placeholder="Nik adın" autocomplete="username" required>
+
+    <div id="passwordArea">
+      <input id="password" type="password" minlength="5" maxlength="15"
+        placeholder="Şifren" autocomplete="current-password">
+    </div>
+
+    <div id="genderArea">
+      <p id="genderText">Lütfen cinsiyetini seç.</p>
+      <div class="gender-buttons">
+        <button type="button" data-gender="Kadın">♀ Kadın</button>
+        <button type="button" data-gender="Erkek">♂ Erkek</button>
+      </div>
+    </div>
+
+    <button type="submit" id="continueBtn">Sohbete Giriş</button>
+  </form>
+
+  <button type="button" id="guestBtn" class="guest-button">Misafir Olarak Giriş</button>
+  <p id="notice" role="status" aria-live="polite"></p>
+  <a href="./kayit.html">✨ Yeni hesap oluştur</a>
+</main>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const form = $("loginForm");
+  const nickInput = $("nick");
+  const passwordInput = $("password");
+  const passwordArea = $("passwordArea");
+  const genderArea = $("genderArea");
+  const genderText = $("genderText");
+  const continueBtn = $("continueBtn");
+  const guestBtn = $("guestBtn");
+  const notice = $("notice");
+
+  let checkedNick = "";
+  let needsPassword = false;
+  let awaitingGender = false;
+  let pendingNick = "";
+  let pendingType = "";
+
+  function message(text){
+    notice.textContent = text;
+  }
+
+  function readObject(key){
+    try{
+      const value = JSON.parse(localStorage.getItem(key) || "{}");
+      if(!value || typeof value !== "object" || Array.isArray(value)) return null;
+      return value;
+    }catch(error){
+      return null;
+    }
+  }
+
+  function validNick(nick){
+    return /^[A-Za-z0-9_]{3,20}$/.test(nick);
+  }
+
+  function reset(){
+    passwordArea.style.display = "none";
+    genderArea.style.display = "none";
+    passwordInput.required = false;
+    passwordInput.value = "";
+    continueBtn.disabled = false;
+    guestBtn.disabled = false;
+    continueBtn.textContent = "Sohbete Giriş";
+    checkedNick = "";
+    needsPassword = false;
+    awaitingGender = false;
+    pendingNick = "";
+    pendingType = "";
+  }
+
+  function enterChat(nick,type,gender){
+    sessionStorage.setItem("Alemsin_nik",nick);
+    sessionStorage.setItem("Alemsin_tur",type);
+    sessionStorage.setItem("Alemsin_cinsiyet",gender || "");
+    window.location.href = "./sohbet.html";
+  }
+
+  function askGender(nick,type){
+    pendingNick = nick;
+    pendingType = type;
+    awaitingGender = true;
+    genderArea.style.display = "block";
+    genderText.textContent = type === "misafir"
+      ? "Misafir olarak giriş yapıyorsun. Cinsiyetini seç:"
+      : "Profilinde cinsiyet bilgisi yok. Lütfen seç:";
+    continueBtn.disabled = true;
+    guestBtn.disabled = true;
+    message("Devam etmek için Kadın veya Erkek seçeneğine bas.");
+  }
+
+  function saveGender(gender){
+    if(!awaitingGender || !pendingNick){
+      message("Önce nik yaz ve giriş işlemini başlat.");
+      return;
+    }
+
+    const nick = pendingNick;
+    const type = pendingType;
+
+    if(type === "uye"){
+      const profiles = readObject("Alemsin_profiles");
+      if(profiles === null){
+        message("Profil bilgileri okunamadı.");
+        return;
+      }
+
+      const key = nick.toLowerCase();
+      const oldProfile = profiles[key] || {};
+      profiles[key] = {
+        ...oldProfile,
+        nik: oldProfile.nik || nick,
+        cinsiyet: gender
+      };
+
+      try{
+        localStorage.setItem("Alemsin_profiles",JSON.stringify(profiles));
+      }catch(error){
+        message("Cinsiyet kaydedilemedi. Tarayıcı depolama alanını kontrol et.");
+        return;
+      }
+    }
+
+    enterChat(nick,type,gender);
+  }
+
+  // Cinsiyet düğmelerinin tıklama işlemi
+  document.querySelectorAll("button[data-gender]").forEach(button=>{
+    button.addEventListener("click",function(){
+      saveGender(this.getAttribute("data-gender"));
+    });
+  });
+
+  nickInput.addEventListener("input",function(){
+    reset();
+    message("");
+  });
+
+  form.addEventListener("submit",function(event){
+    event.preventDefault();
+
+    if(awaitingGender){
+      message("Lütfen Kadın veya Erkek seç.");
+      return;
+    }
+
+    const nick = nickInput.value.trim();
+    if(!validNick(nick)){
+      message("Nik 3-20 karakter olmalı; harf, rakam ve alt çizgi kullan.");
+      return;
+    }
+
+    const users = readObject("Alemsin_users");
+    if(users === null){
+      message("Kayıt bilgileri okunamadı.");
+      return;
+    }
+
+    const key = nick.toLowerCase();
+
+    if(checkedNick !== key){
+      checkedNick = key;
+      needsPassword = Object.prototype.hasOwnProperty.call(users,key);
+
+      if(needsPassword){
+        passwordArea.style.display = "block";
+        passwordInput.required = true;
+        continueBtn.textContent = "Giriş Yap";
+        message("Bu nik kayıtlı. Şifreni gir ve Giriş Yap'a bas.");
+        passwordInput.focus();
+      }else{
+        askGender(nick,"misafir");
+      }
+      return;
+    }
+
+    if(needsPassword){
+      const currentUsers = readObject("Alemsin_users");
+      if(currentUsers === null ||
+         !Object.prototype.hasOwnProperty.call(currentUsers,key) ||
+         passwordInput.value !== currentUsers[key]){
+        message("Şifre yanlış. Lütfen tekrar dene.");
+        passwordInput.focus();
+        return;
+      }
+
+      const profiles = readObject("Alemsin_profiles");
+      if(profiles === null){
+        message("Profil bilgileri okunamadı.");
+        return;
+      }
+
+      const profile = profiles[key] || {};
+      if(profile.cinsiyet !== "Kadın" && profile.cinsiyet !== "Erkek"){
+        askGender(nick,"uye");
+        return;
+      }
+
+      enterChat(nick,"uye",profile.cinsiyet);
+    }
+  });
+
+  guestBtn.addEventListener("click",function(){
+    if(awaitingGender) return;
+
+    const nick = nickInput.value.trim();
+    if(!validNick(nick)){
+      message("Misafir girişi için 3-20 karakterlik bir nik yaz.");
+      nickInput.focus();
+      return;
+    }
+
+    const users = readObject("Alemsin_users");
+    if(users === null){
+      message("Kayıt bilgileri okunamadı.");
+      return;
+    }
+
+    if(Object.prototype.hasOwnProperty.call(users,nick.toLowerCase())){
+      message("Bu nik kayıtlı. Lütfen şifrenle giriş yap.");
+      passwordArea.style.display = "block";
+      passwordInput.required = true;
+      continueBtn.textContent = "Giriş Yap";
+      checkedNick = nick.toLowerCase();
+      needsPassword = true;
+      passwordInput.focus();
+      return;
+    }
+
+    askGender(nick,"misafir");
+  });
+})();
+</script>
+</body>
+</html>

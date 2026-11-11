@@ -1,0 +1,494 @@
+```html
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alemsin Sohbet</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #180e20;
+    color: white;
+}
+
+header {
+    background: #351541;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #673778;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #f0c6ff;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+}
+
+.cikis {
+    background: #6c327c;
+    color: white;
+}
+
+.container {
+    display: flex;
+    min-height: calc(100vh - 65px);
+}
+
+.sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    padding: 15px;
+    background: #24132d;
+    border-right: 1px solid #4d2a5a;
+}
+
+.sidebar h3 {
+    color: #e4b3f5;
+    margin-top: 8px;
+}
+
+.oda {
+    display: block;
+    width: 100%;
+    margin-bottom: 9px;
+    text-align: left;
+    color: white;
+    background: #382044;
+}
+
+.oda.aktif {
+    background: #8b43a3;
+}
+
+.kullanicilar {
+    margin-top: 25px;
+}
+
+.kullanici {
+    padding: 8px 5px;
+    color: #e5d4eb;
+    overflow-wrap: anywhere;
+}
+
+.ana {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: calc(100vh - 65px);
+}
+
+.oda-baslik {
+    padding: 15px;
+    font-weight: bold;
+    background: #211128;
+    border-bottom: 1px solid #4d2a5a;
+    color: #efc9ff;
+}
+
+#mesajlar {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.mesaj {
+    background: #302039;
+    border: 1px solid #4d3159;
+    padding: 11px 13px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    overflow-wrap: anywhere;
+    line-height: 1.6;
+}
+
+.mesaj .isim {
+    color: #e4aaff;
+    font-weight: bold;
+}
+
+.mesaj .saat {
+    font-size: 12px;
+    color: #bca8c5;
+    white-space: nowrap;
+}
+
+.alt {
+    padding: 12px;
+    background: #24132d;
+    border-top: 1px solid #4d2a5a;
+}
+
+.girdi-alani {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+#mesajInput {
+    flex: 1;
+    min-width: 0;
+    padding: 13px;
+    border: 1px solid #654174;
+    border-radius: 9px;
+    background: #180e20;
+    color: white;
+    outline: none;
+}
+
+#mesajInput:focus {
+    border-color: #c17cda;
+}
+
+.emoji-btn {
+    background: #493052;
+    color: white;
+    font-size: 20px;
+}
+
+.gonder {
+    background: #8b43a3;
+    color: white;
+    font-weight: bold;
+}
+
+#emojiPanel {
+    display: none;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 10px 0;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.emoji {
+    background: #493052;
+    font-size: 22px;
+    padding: 7px;
+}
+
+.bos {
+    color: #bda8c8;
+    text-align: center;
+    margin-top: 30px;
+}
+
+@media (max-width: 650px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #4d2a5a;
+    }
+
+    .oda-listesi {
+        display: flex;
+        gap: 7px;
+        overflow-x: auto;
+    }
+
+    .oda {
+        width: auto;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .kullanicilar {
+        display: none;
+    }
+
+    .ana {
+        height: 65vh;
+        min-height: 350px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>💜 Alemsin Sohbet</h1>
+    <button class="cikis" onclick="cikisYap()">Çıkış</button>
+</header>
+
+<div class="container">
+
+    <aside class="sidebar">
+        <h3>💬 Sohbet Odaları</h3>
+
+        <div class="oda-listesi">
+            <button class="oda aktif" onclick="odaSec('Genel', this)">🌍 Genel</button>
+            <button class="oda" onclick="odaSec('Arkadaşlık', this)">💗 Arkadaşlık</button>
+            <button class="oda" onclick="odaSec('Oyun', this)">🎮 Oyun</button>
+            <button class="oda" onclick="odaSec('Müzik', this)">🎵 Müzik</button>
+        </div>
+
+        <div class="kullanicilar">
+            <h3>👥 Kullanıcılar</h3>
+            <div id="kullaniciListesi"></div>
+        </div>
+    </aside>
+
+    <main class="ana">
+        <div class="oda-baslik" id="odaBaslik">🌍 Genel</div>
+
+        <div id="mesajlar">
+            <div class="bos">💜 Sohbete hoş geldin!</div>
+        </div>
+
+        <div class="alt">
+            <div id="emojiPanel"></div>
+
+            <div class="girdi-alani">
+                <button class="emoji-btn" onclick="emojiAc()">😊</button>
+                <input
+                    id="mesajInput"
+                    type="text"
+                    placeholder="Mesajını yaz..."
+                    maxlength="1000"
+                >
+                <button class="gonder" onclick="mesajGonder()">Gönder</button>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<script>
+const profilAnahtari = "Alemsin_profiles";
+const mesajAnahtari = "Alemsin_sohbet_mesajlari";
+
+let aktifOda = "Genel";
+let nik = sessionStorage.getItem("Alemsin_nik") || "Misafir";
+
+const emojiListesi = [
+    "😀","😃","😄","😁","😆","😅","😂","🤣",
+    "😊","😇","🙂","😉","😍","🥰","😘","😋",
+    "😎","🤩","🥳","😏","😢","😭","😡","🤔",
+    "🤗","🤭","😴","👍","👎","👏","🙏","💪",
+    "❤️","🧡","💛","💚","💙","💜","💕","💞",
+    "💖","💗","💘","💋","🌹","🌸","🌺","🌷",
+    "⭐","✨","🔥","🎉","🎂","🎶","🎵","🎮",
+    "⚽","🏆","☕","🍕","🍓","🐱","🐶","🦋"
+];
+
+let odalar = {
+    "Genel": [],
+    "Arkadaşlık": [],
+    "Oyun": [],
+    "Müzik": []
+};
+
+function mesajlariYukle() {
+    try {
+        const kayit = JSON.parse(localStorage.getItem(mesajAnahtari));
+
+        if (kayit && typeof kayit === "object") {
+            Object.keys(odalar).forEach(oda => {
+                if (Array.isArray(kayit[oda])) {
+                    odalar[oda] = kayit[oda];
+                }
+            });
+        }
+    } catch (e) {
+        console.log("Mesaj kayıtları okunamadı.");
+    }
+}
+
+function mesajlariKaydet() {
+    try {
+        localStorage.setItem(mesajAnahtari, JSON.stringify(odalar));
+    } catch (e) {
+        alert("Mesajlar kaydedilemedi. Tarayıcı depolama alanını kontrol et.");
+    }
+}
+
+function odaSec(oda, buton) {
+    aktifOda = oda;
+
+    document.querySelectorAll(".oda").forEach(b => {
+        b.classList.remove("aktif");
+    });
+
+    buton.classList.add("aktif");
+
+    const simgeler = {
+        "Genel": "🌍",
+        "Arkadaşlık": "💗",
+        "Oyun": "🎮",
+        "Müzik": "🎵"
+    };
+
+    document.getElementById("odaBaslik").textContent =
+        simgeler[oda] + " " + oda;
+
+    mesajCiz();
+}
+
+function mesajGonder() {
+    const input = document.getElementById("mesajInput");
+    const metin = input.value.trim();
+
+    if (!metin) {
+        input.focus();
+        return;
+    }
+
+    const saat = new Date().toLocaleTimeString("tr-TR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+    });
+
+    odalar[aktifOda].push({
+        id: Date.now() + Math.random(),
+        isim: nik,
+        metin: metin,
+        saat: saat
+    });
+
+    mesajlariKaydet();
+    input.value = "";
+    mesajCiz();
+    input.focus();
+}
+
+function mesajCiz() {
+    const alan = document.getElementById("mesajlar");
+    alan.innerHTML = "";
+
+    const liste = odalar[aktifOda];
+
+    if (!liste || liste.length === 0) {
+        const bos = document.createElement("div");
+        bos.className = "bos";
+        bos.textContent = "💜 Bu odada henüz mesaj yok. İlk mesajı sen yaz!";
+        alan.appendChild(bos);
+        return;
+    }
+
+    liste.forEach(m => {
+        const kutu = document.createElement("div");
+        kutu.className = "mesaj";
+
+        const isim = document.createElement("span");
+        isim.className = "isim";
+        isim.textContent = m.isim + " : ";
+
+        const metin = document.createElement("span");
+        metin.textContent = m.metin + " ";
+
+        const saat = document.createElement("span");
+        saat.className = "saat";
+        saat.textContent = m.saat || "";
+
+        kutu.appendChild(isim);
+        kutu.appendChild(metin);
+        kutu.appendChild(saat);
+
+        alan.appendChild(kutu);
+    });
+
+    alan.scrollTop = alan.scrollHeight;
+}
+
+function emojiAc() {
+    const panel = document.getElementById("emojiPanel");
+
+    if (panel.style.display === "flex") {
+        panel.style.display = "none";
+        return;
+    }
+
+    panel.innerHTML = "";
+
+    emojiListesi.forEach(emoji => {
+        const btn = document.createElement("button");
+        btn.className = "emoji";
+        btn.textContent = emoji;
+
+        btn.onclick = function() {
+            const input = document.getElementById("mesajInput");
+            input.value += emoji;
+            input.focus();
+        };
+
+        panel.appendChild(btn);
+    });
+
+    panel.style.display = "flex";
+}
+
+function kullanicilariGoster() {
+    const alan = document.getElementById("kullaniciListesi");
+    alan.innerHTML = "";
+
+    let profiller = [];
+
+    try {
+        profiller = JSON.parse(localStorage.getItem(profilAnahtari)) || [];
+    } catch (e) {
+        profiller = [];
+    }
+
+    if (!Array.isArray(profiller)) {
+        profiller = [];
+    }
+
+    const isimler = [...new Set([
+        nik,
+        ...profiller
+            .map(p => p && (p.nik || p.kullaniciAdi || p.ad))
+            .filter(Boolean)
+    ])];
+
+    isimler.forEach(isim => {
+        const satir = document.createElement("div");
+        satir.className = "kullanici";
+        satir.textContent = "🟣 " + isim;
+        alan.appendChild(satir);
+    });
+}
+
+function cikisYap() {
+    sessionStorage.removeItem("Alemsin_nik");
+    sessionStorage.removeItem("Alemsin_tur");
+    sessionStorage.removeItem("Alemsin_cinsiyet");
+    window.location.href = "index.html";
+}
+
+document.getElementById("mesajInput").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+        mesajGonder();
+    }
+});
+
+mesajlariYukle();
+kullanicilariGoster();
+mesajCiz();
+</script>
+
+</body>
+</html>
+```
