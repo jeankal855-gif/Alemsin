@@ -1959,7 +1959,7 @@ let GP=1,LGD=0;
 function pgr(P,N,at){const pg=N<=7?Array.from({length:N},(_,i)=>i+1):P<=4?[1,2,3,4,5,'…',N]:P>=N-3?[1,'…',N-4,N-3,N-2,N-1,N]:[1,'…',P-1,P,P+1,'…',N];return `<button class="pg" ${at}="${P-1}" ${P==1?'disabled':''}>«</button>`+pg.map(x=>x=='…'?'<button class="pg" disabled>…</button>':`<button class="pg ${x==P?'on':''}" ${at}="${x}">${x}</button>`).join('')+`<button class="pg" ${at}="${P+1}" ${P==N?'disabled':''}>»</button>`}
 let GV153=0;/* v153u: sadece-VPN filtresi */
 function fillLg(){const q=($('#gq').value||'').toLowerCase(),L=state.logins.slice().sort((a,b)=>b.ts-a.ts).filter(l=>(!GV153||l.vpn==1)&&[l.k,l.k2,l.ip,l.isp].some(v=>String(v||'').toLowerCase().includes(q))),N=Math.max(1,Math.ceil(L.length/10));GP=Math.min(Math.max(1,GP),N);
- $('#gb').innerHTML=L.slice((GP-1)*10,GP*10).map(l=>`<tr><td>${esc(l.k)}</td><td>${esc(l.r)}</td><td>${fmtD(l.ts)}</td><td>${esc(l.c)}</td><td>${esc(l.dev)}</td><td>${l.vpn?'<b style="color:#e5383b">VPN'+(l.vrs?'·'+esc(l.vrs):'')+'</b>':'—'}</td><td>${esc(l.ip)}</td><td>${(G.ban.includes(l.k)||isBannedId(ipNorm(l.ip),l.did))?'<span style="color:var(--mu)">Banlandı</span>':`<button class="ic" style="font-size:13px;color:var(--tx)" data-ban="${esc(l.k)}">Banla</button>`}</td><td style="text-align:right"><button class="ib" data-gi="${l.id}" title="Detay">i</button></td></tr>`).join('')||'<tr><td colspan="9">Kayıt yok.</td></tr>';
+ $('#gb').innerHTML=L.slice((GP-1)*10,GP*10).map(l=>`<tr><td>${esc(l.k)}</td><td>${esc(l.r)}</td><td>${fmtD(l.ts)}</td><td>${esc(l.c)}</td><td>${esc(l.dev)}</td><td>${l.vpn?'<b style="color:#e5383b">VPN'+(l.vrs?'·'+esc(l.vrs):'')+'</b>':'—'}</td><td><span class="ipgeo170" data-ip="${esc(l.ip)}" data-ul="${esc(l.ul||'')}" title="Şehir ve ülke için tıkla">${esc(l.ip)}</span></td><td>${(G.ban.includes(l.k)||isBannedId(ipNorm(l.ip),l.did))?'<span style="color:var(--mu)">Banlandı</span>':`<button class="ic" style="font-size:13px;color:var(--tx)" data-ban="${esc(l.k)}">Banla</button>`}</td><td style="text-align:right"><button class="ib" data-gi="${l.id}" title="Detay">i</button></td></tr>`).join('')||'<tr><td colspan="9">Kayıt yok.</td></tr>';
  $('#gpg').innerHTML=pgr(GP,N,'data-gp')}
 function showLg(id){const l=state.logins.find(x=>x.id==id);if(!l)return;const ic=(i,h)=>`<div class="lr"><i>${i}</i><div>${h}</div></div>`,kv=(a,b)=>`<b>${a}:</b> <small style="display:inline;font-size:13px">${esc(b)}</small>`,ri=rankIco(l.r);
  $('#lgb').innerHTML=ic('👤',`<b>${esc(l.k)}</b>`)+ic('☝',`<b>${l.c=='Bayan'?'Kadın':esc(l.c)}</b>`)+ic('★',(ri?`<div style="font-size:15px;letter-spacing:1px">${ri}</div>`:'')+`<small>${esc(l.r)}</small>`)+ic('⏱',`<b>${ago(l.ts)}</b><small>${fmtD(l.ts)}</small>`)+ic('📶',`<small style="font-size:13px">${esc(l.ip)}</small>`)+ic('🛡',l.vpn?'<b style="color:#e5383b">VPN/proxy</b><small style="display:inline;font-size:13px"> — '+esc(l.isp||'—')+'</small>':'<small style="display:inline;font-size:13px">VPN yok</small>')+ic('🌍',kv('Ülke',l.ul||'—'))+ic('🌐',kv('Tarayıcı',l.br))+ic('📱',kv('Cihaz',l.dev))+ic('🖥',kv('İşletim sistemi',l.os))+ic('⛶',kv('Cihaz ekranı',l.scr))+ic('💻',kv('Cihaz platform',l.pf));$('#lgm').style.display='flex'}
@@ -2092,12 +2092,12 @@ function ctiList153(){try{return dedupePeople153().filter(function(p){return p.c
 function ctiHtml153(excl153){try{if(!CTI153.me&&!can(8))return '';const my=me.owner?999:ctiRank153(me.name);const sk153={};try{(excl153||[]).forEach(function(x){sk153[String(x).toLowerCase()]=1})}catch(e0n){}const L=ctiList153().filter(p=>gor162(p.n)&&!sk153[String(p.n).toLowerCase()]);/* v162: cati kadrosu da tek gorunurluk kuralindan gecer */if(!L.length)return '';/* v153m: kişi listesinde zaten görünenler catı satırı olarak tekrarlanmaz */return '<div class="ctih153"><i class="fa-solid fa-house-chimney"></i> ÇATIDA <b>'+L.length+'</b></div>'+L.map(p=>'<div class="rrow ctirow153" data-ru="'+esc(p.n)+'" data-u="'+esc(p.n)+'" title="Catıda — tıkla: profil"><span class="rav">'+esc(p.n[0]||'?')+'<i class="onld" title="Catıda — çevrimiçi"></i></span><span class="rinf"><span class="rnm">'+esc(p.n)+(p.me?'<small class="rtag">sen</small>':'')+'</span><small class="rst">'+esc(ctiRname153(p.rk))+'</small></span><span class="rics"><i class="fa-solid fa-house-chimney dim" title="Catıda"></i></span></div>').join('')}catch(e){return ''}}/* v153i: catı kadrosu — hiyerarşi filtresiyle */
 /* v153i2: ÇATIDA bölümü — görünen SOHBET kart listesinin en üstünde, hiyerarşi filtresiyle */
 function ctiCards153(excl153){try{if(!CTI153.me&&!can(8))return '';const my=me.owner?999:ctiRank153(me.name);const sk153={};try{(excl153||[]).forEach(function(x){sk153[String(x).toLowerCase()]=1})}catch(e0m){}const L=ctiList153().filter(p=>gor162(p.n)&&!sk153[String(p.n).toLowerCase()]);/* v162: cati kartlari da tek gorunurluk kuralindan gecer */if(!L.length)return '';/* v153m: ana listede zaten görünen kişi ÇATIDA bölümünde tekrar basılmaz — çift nik bitti */return '<div class="ctih153"><i class="fa-solid fa-house-chimney"></i> ÇATIDA <b>'+L.length+'</b></div>'+L.map(p=>`<div class="room ucard ctirow153${sexOf(p.n)=='v'?' fk78':' mk78'}" data-l="${esc(p.n)}" data-u="${esc(p.n)}" title="Catıda — çevrimiçi">${av({k:p.n},54)}<div class="ucol"><span class="unm"><b>${esc(p.n)}</b>${p.me?'<small class="rtag">sen</small>':'<small class="rtag live">catıda</small>'}</span><small class="usub">${esc(ctiRname153(p.rk))} · Çatıda</small></div><span class="urgt"><i class="fa-solid fa-house-chimney udev" title="Catıda"></i></span></div>`).join('')}catch(e){return ''}}
-function netDg153(){try{const el=document.getElementById('netdg153');if(!el)return;const on=!!(window.NET&&NET.on);let cnt=0;if(on){try{const M=new Map();if(me&&me.name)M.set(nrmN153(me.name),1);if(NET.names)NET.names.forEach(function(v){if(v&&v.n)M.set(nrmN153(v.n),1)});if(NET.hepsi)NET.hepsi.forEach(function(v){if(v&&v.n)M.set(nrmN153(v.n),1)});cnt=M.size}catch(e0){cnt=1}}el.classList.toggle('on',on);el.classList.toggle('off',!on);el.innerHTML='<i></i><b>'+(on?String(cnt):'—')+'</b>';el.title=on?('Ağ açık — sitedeki kişi: '+cnt+' — tıkla: ayrıntı'):'Ağ kapalı — tıkla: ayrıntı';el.onclick=function(){try{const D=(window.NET&&NET.dbg)||{};note('Ağ: '+(on?'AÇIK':'KAPALI')+' • Sitedeki kişi: '+(on?cnt:0)+' • Oda bağlantısı: '+(D.peers||0)+' • Kaynak: '+String(D.cdn||'—').replace('https://','').replace('http://','').split('/')[0]+' • Relay: 14 • API: '+(D.apis||1)+((D.st!=null&&D.st>=0)?(' • CDN sırası: '+D.st):'')+' • Sürüm: v169')}catch(e1){}}}catch(e){}}/* v153k: mini tesih rozeti — v153n: tamamen gizli; sayi normalize rumuzla tekil sayilir, ayni kisi iki agdan bir kez sayilir */
+function netDg153(){try{const el=document.getElementById('netdg153');if(!el)return;const on=!!(window.NET&&NET.on);let cnt=0;if(on){try{const M=new Map();if(me&&me.name)M.set(nrmN153(me.name),1);if(NET.names)NET.names.forEach(function(v){if(v&&v.n)M.set(nrmN153(v.n),1)});if(NET.hepsi)NET.hepsi.forEach(function(v){if(v&&v.n)M.set(nrmN153(v.n),1)});cnt=M.size}catch(e0){cnt=1}}el.classList.toggle('on',on);el.classList.toggle('off',!on);el.innerHTML='<i></i><b>'+(on?String(cnt):'—')+'</b>';el.title=on?('Ağ açık — sitedeki kişi: '+cnt+' — tıkla: ayrıntı'):'Ağ kapalı — tıkla: ayrıntı';el.onclick=function(){try{const D=(window.NET&&NET.dbg)||{};note('Ağ: '+(on?'AÇIK':'KAPALI')+' • Sitedeki kişi: '+(on?cnt:0)+' • Oda bağlantısı: '+(D.peers||0)+' • Kaynak: '+String(D.cdn||'—').replace('https://','').replace('http://','').split('/')[0]+' • Relay: 14 • API: '+(D.apis||1)+((D.st!=null&&D.st>=0)?(' • CDN sırası: '+D.st):'')+' • Sürüm: v170')}catch(e1){}}}catch(e){}}/* v153k: mini tesih rozeti — v153n: tamamen gizli; sayi normalize rumuzla tekil sayilir, ayni kisi iki agdan bir kez sayilir */
 try{window.__boot153=window.__boot153||Date.now();(function nw153(){try{const el=document.getElementById('netwarn153');if(el){const on=!!(window.NET&&NET.on);el.style.display=(!on&&!window.__kickCut153&&Date.now()-window.__boot153>15000)?'flex':'none'}}catch(e){}setTimeout(nw153,4000)})()}catch(e){}/* v153l: bağlantı uyarı gözlemcisi — 15 sn sonra hâlâ ağ yoksa amber bant açılır */
 /* v164: OTOMATİK SÜRÜM YENİLEME — yayına yeni dosya konunca açık sayfalar kendini tazeler; bütün cihazlar aynı sürümde gerçek P2P'ye bağlanır */
 try{(function gv164(){
  if(location.protocol!='https:'&&location.protocol!='http:')return;
- window.__SUR164='v169-4cad689a';/* sürüm damgası — her yeni yayında değişir; v166 istemcileri bu dosyayı görünce kendini tazeler */
+ window.__SUR164='v170-18f2191d';/* sürüm damgası — her yeni yayında değişir; v166 istemcileri bu dosyayı görünce kendini tazeler */
  let bsy164=0;
  const gvF164=function(){return fetch(location.href.split('#')[0]+(location.search?'&':'?')+'__gv164='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).catch(function(){return ''})};
  const gvC164=function(){if(bsy164)return;bsy164=1;gvF164().then(function(t){bsy164=0;if(!t)return;const m=String(t).match(/__SUR164='([^']+)'/);if(m&&m[1]&&m[1]!=window.__SUR164){try{note('Yeni sürüm yükleniyor — sayfa tazeleniyor…')}catch(e164n){}setTimeout(function(){try{sessionStorage.setItem('ac_gv164a','1')}catch(e164s){}try{location.reload()}catch(e164r){}},900)/* v164: tazelenen sayfa işaretle döner — kullanıcı kapıda yeniden yazmaz */}}).catch(function(){bsy164=0})};
@@ -3723,6 +3723,90 @@ document.addEventListener('click',function(ev){
   ac(o);
  }catch(e169c){}
 },true);
+})();
+</script>
+<script>
+/* v170: Giriş Kayıtları'nda IP adresine tıklayınca ŞEHİR + ÜLKE gösterilir
+   — ipwho.is → freeipapi.com → ipapi.co zinciri, localStorage'da 7 gün önbellek,
+   özel/yerel/ayırtılmış IP'lerde ağa çıkmadan bilgilendirir; telefon + bilgisayar */
+(function(){
+'use strict';
+if(window.__IPG170)return;window.__IPG170=1;
+var OZEL170=/^(10\.|127\.|0\.|169\.254\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.0\.2\.|198\.51\.100\.|203\.0\.113\.|::1$|f[cd][0-9a-f]{2}:|fe[89ab][0-9a-f]{2}:)/i;
+var CB170='ipg170_ob',pop=null;
+ if(!document.getElementById('ipgS170')){var st170=document.createElement('style');st170.id='ipgS170';st170.textContent='.ipgeo170{cursor:pointer;text-decoration:underline dotted #a08420;text-underline-offset:2px}.ipgeo170:hover{color:#8a6d00}#ipg170{position:fixed;z-index:2147483000;width:260px;max-width:94vw;background:#fffdf5;border:1px solid #d9c98a;border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,.28);font:13px/1.45 system-ui,-apple-system,\'Segoe UI\',sans-serif;color:#2b2416;overflow:hidden}#ipg170 .h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:linear-gradient(90deg,#f7c948,#e5b83a);color:#3a2c05}#ipg170 .h b{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#ipg170 .h button{flex:none;border:0;background:rgba(0,0,0,.08);border-radius:7px;padding:3px 8px;font:700 11px/1.2 system-ui,sans-serif;cursor:pointer;color:#3a2c05}#ipg170 .b{padding:8px 10px}#ipg170 .r{display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px dashed #e8dfc9}#ipg170 .r:last-of-type{border-bottom:0}#ipg170 .r i{font-style:normal;color:#8a7b52;font-size:12px;flex:none}#ipg170 .r b{font-size:12.5px;text-align:right;word-break:break-word}#ipg170 .k{margin-top:8px;font-size:10.5px;color:#a4966b}#ipg170 .hata{color:#c02626;font-weight:600;font-size:12.5px}';(document.head||document.documentElement).appendChild(st170)}
+function obAl(){try{return JSON.parse(localStorage.getItem(CB170)||'{}')}catch(e170){return{}}}
+function obKoy(ip,d){try{var o=obAl();o[ip]={t:Date.now(),d:d};var ks=Object.keys(o);if(ks.length>200)delete o[ks[0]];localStorage.setItem(CB170,JSON.stringify(o))}catch(e170b){}}
+function tf(u,ms){return new Promise(function(res,rej){var bitti=0,c=('AbortController'in window)?new AbortController():null;var t=setTimeout(function(){if(bitti)return;bitti=1;try{if(c)c.abort()}catch(e170t){}rej(new Error('zaman asimi'))},ms||5000);fetch(u,c?{signal:c.signal}:{}).then(function(x){if(bitti)return;clearTimeout(t);return x.json()}).then(function(j){if(bitti)return;bitti=1;res(j)}).catch(function(e170f){if(bitti)return;bitti=1;clearTimeout(t);rej(e170f)})})}
+function getir(ip){
+ var kay=obAl()[ip];
+ if(kay&&kay.d&&Date.now()-kay.t<7*864e5)return Promise.resolve(kay.d);
+ return tf('https://ipwho.is/'+encodeURIComponent(ip),5000).then(function(d){
+  if(!d||d.success===false||(!d.country&&!d.city))throw new Error('yok');
+  var cn=d.connection||{},sc=d.security||{};
+  return{ul:d.country||'—',sr:d.city||'—',bg:d.region||'—',isp:String(cn.isp||cn.org||'—'),vpn:(sc.anonymous||sc.proxy||sc.vpn||sc.tor)?1:0,kay:'ipwho.is'};
+ }).catch(function(){
+  return tf('https://freeipapi.com/api/json/'+encodeURIComponent(ip),5000).then(function(d){
+   if(!d||(!d.countryName&&!d.cityName))throw new Error('yok');
+   return{ul:d.countryName||'—',sr:d.cityName||'—',bg:d.regionName||'—',isp:'—',vpn:d.isProxy?1:0,kay:'freeipapi.com'};
+  });
+ }).catch(function(){
+  return tf('https://ipapi.co/'+encodeURIComponent(ip)+'/json/',5000).then(function(d){
+   if(!d||(!d.country_name&&!d.city))throw new Error('yok');
+   return{ul:d.country_name||'—',sr:d.city||'—',bg:d.region||'—',isp:String(d.org||'—'),vpn:0,kay:'ipapi.co'};
+  });
+ }).then(function(d){obKoy(ip,d);return d});
+}
+function kapat(){if(!pop)return;var p=pop;pop=null;try{p.remove()}catch(e170r){}}
+document.addEventListener('click',function(ev){try{if(!pop)return;var t170=ev.target;if(t170&&t170.closest&&(t170.closest('.ipgeo170')||pop.contains(t170)))return;kapat()}catch(e170d){}},true);document.addEventListener('keydown',function(ev){try{if(ev.key=='Escape'&&pop)kapat()}catch(e170k){}},false);
+function satir(b,ad,deger){var r=document.createElement('div');r.className='r';var i=document.createElement('i');i.textContent=ad;var bq=document.createElement('b');bq.textContent=deger;r.appendChild(i);r.appendChild(bq);b.appendChild(r)}
+function basla(anchor,baslik){
+ kapat();
+ pop=document.createElement('div');pop.id='ipg170';
+ var h=document.createElement('div');h.className='h';var bt=document.createElement('b');bt.textContent=baslik;var xb=document.createElement('button');xb.type='button';xb.className='x';xb.textContent='Kapat';xb.addEventListener('click',function(e){e.stopPropagation();kapat()});h.appendChild(bt);h.appendChild(xb);
+ var b=document.createElement('div');b.className='b';
+ pop.appendChild(h);pop.appendChild(b);document.body.appendChild(pop);
+ var w=pop.offsetWidth||260,hh=pop.offsetHeight||90,r=anchor.getBoundingClientRect();
+ var x=Math.max(8,Math.min(r.left,window.innerWidth-w-8));
+ var y=r.bottom+6;if(y+hh>window.innerHeight-8)y=Math.max(8,r.top-hh-6);
+ pop.style.left=x+'px';pop.style.top=y+'px';
+  return b;
+}
+function ulGoster(b,ul){if(ul)satir(b,'Ülke (kayıttan)',ul)}
+function ac(ip,ul,anchor){
+ var b=basla(anchor,'IP Konumu — '+ip);if(pop)pop._ip=ip;
+ b.textContent='Konum aranıyor…';
+ ulGoster(b,ul);
+ getir(ip).then(function(d){
+  if(!pop||pop._ip!==ip)return;
+  b.innerHTML='';
+  satir(b,'Ülke',d.ul);satir(b,'Şehir',d.sr);satir(b,'Bölge',d.bg);satir(b,'ISP',d.isp||'—');satir(b,'VPN',d.vpn?'Evet':'Hayır');
+  var k=document.createElement('div');k.className='k';k.textContent='kaynak: '+d.kay+' · sonuç 7 gün önbellekte';b.appendChild(k);
+ }).catch(function(){
+  if(!pop||pop._ip!==ip)return;
+  b.innerHTML='';
+  ulGoster(b,ul);
+  var h2=document.createElement('div');h2.className='hata';h2.textContent='Şehir/konum alınamadı — konum sağlayıcılarına ulaşılamadı.';b.appendChild(h2);
+ });
+}
+function ozelGoster(ip,anchor){
+ var b=basla(anchor,'IP Konumu');if(pop)pop._ip=ip;
+ var uy=document.createElement('div');uy.className='hata';uy.textContent='Özel/yerel/ayırtılmış IP — coğrafi konum sorgulanamaz.';b.appendChild(uy);
+ var k2=document.createElement('div');k2.className='k';k2.textContent='Yerel ağ ve örnek (documentation) adresleri konumlandırılamaz.';b.appendChild(k2);
+}
+document.addEventListener('click',function(ev){
+ try{
+  var el=ev.target;
+  if(!el||!el.closest)return;
+  var s=el.closest('.ipgeo170');
+  if(!s)return;
+  ev.preventDefault();ev.stopPropagation();
+  var ip=s.getAttribute('data-ip')||'';
+  if(pop&&pop._ip===ip){kapat();return}
+  if(!ip||ip==='—'||OZEL170.test(ip)){ozelGoster(ip,s);return}
+  ac(ip,s.getAttribute('data-ul')||'',s);
+ }catch(e170c){}
+},false);
 })();
 </script>
 </body>
