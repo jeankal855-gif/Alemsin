@@ -1845,7 +1845,9 @@ const buyer=()=>STF.concat(state.members).find(x=>x.k==me.name);
 /* v28: GIF mesajları — panel seçimi (m.gif) + metin içindeki .gif URL'leri de görsel olarak akar */
 const GIFRE=/https?:\/\/[^\s"'<>]+\.gif/gi;
 window.gifErr=el=>{try{const s=document.createElement('span');s.className='gimgf';s.textContent='🎬 GIF yüklenemedi';el.replaceWith(s)}catch(e){}};
-const msgHTML=m=>(m.an!=null/* v49: kilitli özel satırı kalktı — özel içerik genel akışta hiçbir biçimde gösterilmez */&&state.anims[m.an]?(state.anims[m.an].img?`<img class="ani" src="${state.anims[m.an].img}">`:'🎞'):(m.yt?`<a class="ytlnk" href="${esc(m.yt)}" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> YouTube videosunu izle</a>`:(m.gif?`<img class="gimg" src="${esc(m.gif)}" alt="GIF" loading="lazy" onerror="gifErr(this)">`:(m.img?`<img class="cimg" src="${m.img}" alt="">`:(m.aud?`<span class="audbox"><audio controls src="${m.aud}"></audio></span>`:esc(m.text||'').replace(GIFRE,u=>`<img class="gimg inl" src="${u}" alt="GIF" loading="lazy" onerror="gifErr(this)">`))))));
+/* v169: metin içindeki YouTube linkleri panele açılır */
+const YTLK169=/https?:\/\/(?:www\.|m\.)?(?:youtube\.com|youtu\.be)\/[^\s"'<>]+/gi;
+const msgHTML=m=>(m.an!=null/* v49: kilitli özel satırı kalktı — özel içerik genel akışta hiçbir biçimde gösterilmez */&&state.anims[m.an]?(state.anims[m.an].img?`<img class="ani" src="${state.anims[m.an].img}">`:'🎞'):(m.yt?`<a class="ytlnk" href="${esc(m.yt)}" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> YouTube videosunu izle</a>`:(m.gif?`<img class="gimg" src="${esc(m.gif)}" alt="GIF" loading="lazy" onerror="gifErr(this)">`:(m.img?`<img class="cimg" src="${m.img}" alt="">`:(m.aud?`<span class="audbox"><audio controls src="${m.aud}"></audio></span>`:esc(m.text||'').replace(GIFRE,u=>`<img class="gimg inl" src="${u}" alt="GIF" loading="lazy" onerror="gifErr(this)">`).replace(YTLK169,u=>`<a class="ytplk169" href="${u}" target="_blank" rel="noopener">${u}</a>`))))));
 function purgeRooms(){const n=Date.now(),b=state.rooms.length;for(let i=state.rooms.length-1;i>=0;i--){const r=state.rooms[i];if(r.exp&&r.exp<n){if(state.cur>=i&&state.cur>0)state.cur--;state.rooms.splice(i,1)}}if(state.rooms.length!=b){saveRooms();rooms();paint();look()}}
 setInterval(purgeRooms,60000);
 const mkm=document.createElement('div');mkm.id='mkm';mkm.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:45';mkm.innerHTML='<div style="background:var(--bg);color:var(--tx);width:min(480px,94vw);max-height:92vh;display:flex;flex-direction:column;border-radius:4px"><div style="padding:14px 16px;font-size:18px;border-bottom:1px solid var(--bd)">Market</div><div id="mkb" style="overflow:auto;padding:4px 12px 10px"></div><div id="mkmsg" style="padding:0 16px;min-height:22px;color:var(--mu)"></div><div style="padding:10px 16px;text-align:right;border-top:1px solid var(--bd)"><button class="btn b" id="mkx" style="padding:8px 18px">Kapat</button></div></div>';document.body.appendChild(mkm);
@@ -2090,12 +2092,12 @@ function ctiList153(){try{return dedupePeople153().filter(function(p){return p.c
 function ctiHtml153(excl153){try{if(!CTI153.me&&!can(8))return '';const my=me.owner?999:ctiRank153(me.name);const sk153={};try{(excl153||[]).forEach(function(x){sk153[String(x).toLowerCase()]=1})}catch(e0n){}const L=ctiList153().filter(p=>gor162(p.n)&&!sk153[String(p.n).toLowerCase()]);/* v162: cati kadrosu da tek gorunurluk kuralindan gecer */if(!L.length)return '';/* v153m: kişi listesinde zaten görünenler catı satırı olarak tekrarlanmaz */return '<div class="ctih153"><i class="fa-solid fa-house-chimney"></i> ÇATIDA <b>'+L.length+'</b></div>'+L.map(p=>'<div class="rrow ctirow153" data-ru="'+esc(p.n)+'" data-u="'+esc(p.n)+'" title="Catıda — tıkla: profil"><span class="rav">'+esc(p.n[0]||'?')+'<i class="onld" title="Catıda — çevrimiçi"></i></span><span class="rinf"><span class="rnm">'+esc(p.n)+(p.me?'<small class="rtag">sen</small>':'')+'</span><small class="rst">'+esc(ctiRname153(p.rk))+'</small></span><span class="rics"><i class="fa-solid fa-house-chimney dim" title="Catıda"></i></span></div>').join('')}catch(e){return ''}}/* v153i: catı kadrosu — hiyerarşi filtresiyle */
 /* v153i2: ÇATIDA bölümü — görünen SOHBET kart listesinin en üstünde, hiyerarşi filtresiyle */
 function ctiCards153(excl153){try{if(!CTI153.me&&!can(8))return '';const my=me.owner?999:ctiRank153(me.name);const sk153={};try{(excl153||[]).forEach(function(x){sk153[String(x).toLowerCase()]=1})}catch(e0m){}const L=ctiList153().filter(p=>gor162(p.n)&&!sk153[String(p.n).toLowerCase()]);/* v162: cati kartlari da tek gorunurluk kuralindan gecer */if(!L.length)return '';/* v153m: ana listede zaten görünen kişi ÇATIDA bölümünde tekrar basılmaz — çift nik bitti */return '<div class="ctih153"><i class="fa-solid fa-house-chimney"></i> ÇATIDA <b>'+L.length+'</b></div>'+L.map(p=>`<div class="room ucard ctirow153${sexOf(p.n)=='v'?' fk78':' mk78'}" data-l="${esc(p.n)}" data-u="${esc(p.n)}" title="Catıda — çevrimiçi">${av({k:p.n},54)}<div class="ucol"><span class="unm"><b>${esc(p.n)}</b>${p.me?'<small class="rtag">sen</small>':'<small class="rtag live">catıda</small>'}</span><small class="usub">${esc(ctiRname153(p.rk))} · Çatıda</small></div><span class="urgt"><i class="fa-solid fa-house-chimney udev" title="Catıda"></i></span></div>`).join('')}catch(e){return ''}}
-function netDg153(){try{const el=document.getElementById('netdg153');if(!el)return;const on=!!(window.NET&&NET.on);let cnt=0;if(on){try{const M=new Map();if(me&&me.name)M.set(nrmN153(me.name),1);if(NET.names)NET.names.forEach(function(v){if(v&&v.n)M.set(nrmN153(v.n),1)});if(NET.hepsi)NET.hepsi.forEach(function(v){if(v&&v.n)M.set(nrmN153(v.n),1)});cnt=M.size}catch(e0){cnt=1}}el.classList.toggle('on',on);el.classList.toggle('off',!on);el.innerHTML='<i></i><b>'+(on?String(cnt):'—')+'</b>';el.title=on?('Ağ açık — sitedeki kişi: '+cnt+' — tıkla: ayrıntı'):'Ağ kapalı — tıkla: ayrıntı';el.onclick=function(){try{const D=(window.NET&&NET.dbg)||{};note('Ağ: '+(on?'AÇIK':'KAPALI')+' • Sitedeki kişi: '+(on?cnt:0)+' • Oda bağlantısı: '+(D.peers||0)+' • Kaynak: '+String(D.cdn||'—').replace('https://','').replace('http://','').split('/')[0]+' • Relay: 14 • API: '+(D.apis||1)+((D.st!=null&&D.st>=0)?(' • CDN sırası: '+D.st):'')+' • Sürüm: v168')}catch(e1){}}}catch(e){}}/* v153k: mini tesih rozeti — v153n: tamamen gizli; sayi normalize rumuzla tekil sayilir, ayni kisi iki agdan bir kez sayilir */
+function netDg153(){try{const el=document.getElementById('netdg153');if(!el)return;const on=!!(window.NET&&NET.on);let cnt=0;if(on){try{const M=new Map();if(me&&me.name)M.set(nrmN153(me.name),1);if(NET.names)NET.names.forEach(function(v){if(v&&v.n)M.set(nrmN153(v.n),1)});if(NET.hepsi)NET.hepsi.forEach(function(v){if(v&&v.n)M.set(nrmN153(v.n),1)});cnt=M.size}catch(e0){cnt=1}}el.classList.toggle('on',on);el.classList.toggle('off',!on);el.innerHTML='<i></i><b>'+(on?String(cnt):'—')+'</b>';el.title=on?('Ağ açık — sitedeki kişi: '+cnt+' — tıkla: ayrıntı'):'Ağ kapalı — tıkla: ayrıntı';el.onclick=function(){try{const D=(window.NET&&NET.dbg)||{};note('Ağ: '+(on?'AÇIK':'KAPALI')+' • Sitedeki kişi: '+(on?cnt:0)+' • Oda bağlantısı: '+(D.peers||0)+' • Kaynak: '+String(D.cdn||'—').replace('https://','').replace('http://','').split('/')[0]+' • Relay: 14 • API: '+(D.apis||1)+((D.st!=null&&D.st>=0)?(' • CDN sırası: '+D.st):'')+' • Sürüm: v169')}catch(e1){}}}catch(e){}}/* v153k: mini tesih rozeti — v153n: tamamen gizli; sayi normalize rumuzla tekil sayilir, ayni kisi iki agdan bir kez sayilir */
 try{window.__boot153=window.__boot153||Date.now();(function nw153(){try{const el=document.getElementById('netwarn153');if(el){const on=!!(window.NET&&NET.on);el.style.display=(!on&&!window.__kickCut153&&Date.now()-window.__boot153>15000)?'flex':'none'}}catch(e){}setTimeout(nw153,4000)})()}catch(e){}/* v153l: bağlantı uyarı gözlemcisi — 15 sn sonra hâlâ ağ yoksa amber bant açılır */
 /* v164: OTOMATİK SÜRÜM YENİLEME — yayına yeni dosya konunca açık sayfalar kendini tazeler; bütün cihazlar aynı sürümde gerçek P2P'ye bağlanır */
 try{(function gv164(){
  if(location.protocol!='https:'&&location.protocol!='http:')return;
- window.__SUR164='v168-df423d61';/* sürüm damgası — her yeni yayında değişir; v166 istemcileri bu dosyayı görünce kendini tazeler */
+ window.__SUR164='v169-4cad689a';/* sürüm damgası — her yeni yayında değişir; v166 istemcileri bu dosyayı görünce kendini tazeler */
  let bsy164=0;
  const gvF164=function(){return fetch(location.href.split('#')[0]+(location.search?'&':'?')+'__gv164='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).catch(function(){return ''})};
  const gvC164=function(){if(bsy164)return;bsy164=1;gvF164().then(function(t){bsy164=0;if(!t)return;const m=String(t).match(/__SUR164='([^']+)'/);if(m&&m[1]&&m[1]!=window.__SUR164){try{note('Yeni sürüm yükleniyor — sayfa tazeleniyor…')}catch(e164n){}setTimeout(function(){try{sessionStorage.setItem('ac_gv164a','1')}catch(e164s){}try{location.reload()}catch(e164r){}},900)/* v164: tazelenen sayfa işaretle döner — kullanıcı kapıda yeniden yazmaz */}}).catch(function(){bsy164=0})};
@@ -3616,6 +3618,111 @@ $g('#gtgo').onclick=baglan153;
  try{const _bdO164=baglanDevam153;baglanDevam153=function(){_bdO164();try{lsSet('ac_gv164_giris',JSON.stringify({n:nick.value.trim(),p:pw.value||'',s:(window.__GT_SEX=='v'?'v':'')}))}catch(e164k){}}}catch(e164w){}/* v164: başarılı kapı girişi hatırlanır — otomatik sürüm yenilemesinden sonra kullanıcı aynı rumuzla kendiliğinden bağlanır; güvenlik kapıları (cihaz banı, VPN, ülke) aynen işler */
 [nick,pw].forEach(i=>i.onkeydown=e=>{if(e.key=='Enter')baglan153()});/* v153w: Enter tuşu da güvenlik kapısından geçer — eski baglan() tanımsızdı, kapıyı atlatma riski kapatıldı */
 try{nick.focus()}catch(e){}
+})();
+</script>
+<script>
+/* v169: YouTube linkleri panelde açılır — yeni sekme yok; sürüklenebilir + boyutlandırılabilir pencere; telefon + bilgisayar */
+(function(){
+'use strict';
+if(window.__YT169)return;window.__YT169=1;
+var YTR169=/\bhttps?:\/\/(?:www\.|m\.|music\.)?(?:youtube\.com\/(?:watch\?(?:[^#\s]*&)?v=|shorts\/|embed\/|live\/|v\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})[^\s"']*/i;
+function idBul(u){
+ try{
+  var m=String(u||'').match(YTR169);
+  if(!m)return null;
+  var t=0;
+  try{
+   var q=String(u).split('?')[1]||'';
+   var tm=q.match(/(?:^|&)(?:t|start)=([^&#]+)/);
+   if(tm){
+    var x=tm[1];
+    if(/^\d+$/.test(x))t=parseInt(x,10);
+    else t=(+(x.match(/(\d+)h/)||[0,0])[1])*3600+(+(x.match(/(\d+)m/)||[0,0])[1])*60+(+(x.match(/(\d+)s?$/)||[0,0])[1]);
+   }
+  }catch(e169t){}
+  return{id:m[1],t:t,url:m[0]};
+ }catch(e169){return null;}
+}
+var pan=null,fr=null,bd=null,zb=null,big=0,onc=null;
+function kur(){
+ if(pan)return;
+ try{
+  if(!document.getElementById('ytS169')){
+   var st=document.createElement('style');st.id='ytS169';
+   st.textContent='#ytP169{position:fixed;right:12px;bottom:72px;z-index:2147483000;width:min(420px,94vw);display:none;background:#0d1022;border:1px solid #7d6bff;border-radius:14px;box-shadow:0 14px 44px rgba(0,0,0,.6);overflow:hidden;color:#eaeaff;font:13px/1.3 system-ui,-apple-system,sans-serif}#ytP169 .h{display:flex;align-items:center;gap:8px;padding:8px 10px;background:linear-gradient(90deg,#2a1e6e,#4a36b8);cursor:move;user-select:none;-webkit-user-select:none;touch-action:none}#ytP169 .h b{flex:1;font-size:12.5px;letter-spacing:.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}#ytP169 .h button{border:0;border-radius:8px;padding:4px 9px;font:700 11.5px/1 system-ui,sans-serif;cursor:pointer;background:rgba(255,255,255,.16);color:#fff;touch-action:manipulation}#ytP169 .h button:active{background:rgba(255,255,255,.32)}#ytP169 .b{position:relative;width:100%;aspect-ratio:16/9;background:#000}#ytP169 .b iframe{position:absolute;left:0;top:0;width:100%;height:100%;border:0;display:block}#ytP169 .r{position:absolute;right:0;bottom:0;width:26px;height:26px;cursor:nwse-resize;touch-action:none;background:linear-gradient(135deg,transparent 0 50%,rgba(255,255,255,.4) 50% 100%)}@media (max-width:520px){#ytP169{width:96vw}}.ytplk169{color:#8ab4ff;word-break:break-all}';
+   (document.head||document.documentElement).appendChild(st);
+  }
+  pan=document.createElement('div');pan.id='ytP169';
+  pan.innerHTML='<div class="h"><b title="Başlıktan tutup sürükle">YouTube</b><button type="button" class="z" title="Büyüt / Küçült">Büyüt</button><button type="button" class="c" title="Kapat">Kapat</button></div><div class="b"><iframe title="YouTube oynatıcı" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;web-share;fullscreen" allowfullscreen playsinline referrerpolicy="strict-origin-when-cross-origin"></iframe></div><div class="r" title="Köşeden büyüt / küçült"></div>';
+  document.body.appendChild(pan);
+  fr=pan.querySelector('iframe');bd=pan.querySelector('.b');zb=pan.querySelector('.z');
+  pan.querySelector('.c').addEventListener('click',function(e){e.stopPropagation();kapat();});
+  zb.addEventListener('click',function(e){e.stopPropagation();buyut();});
+  surukle(pan.querySelector('.h'),0);
+  surukle(pan.querySelector('.r'),1);
+ }catch(e169k){pan=null;}
+}
+function surukle(h,boyutla){
+ var akt=0,sx=0,sy=0,ol=0,ot=0,ow=0,oh=0;
+ h.addEventListener('pointerdown',function(e){
+  if(!pan)return;
+  if(e.target&&e.target.closest&&e.target.closest('button'))return;
+  akt=1;sx=e.clientX;sy=e.clientY;
+  var r=pan.getBoundingClientRect();ol=r.left;ot=r.top;ow=pan.offsetWidth;oh=bd.offsetHeight;
+  try{h.setPointerCapture(e.pointerId);}catch(e169p){}
+  e.preventDefault();
+ });
+ h.addEventListener('pointermove',function(e){
+  if(!akt)return;
+  var dx=e.clientX-sx,dy=e.clientY-sy;
+  if(boyutla){
+   var W=Math.max(200,Math.min(ow+dx,Math.max(200,window.innerWidth-16)));
+   var H=Math.max(130,Math.min(oh+dy,Math.max(130,window.innerHeight-80)));
+   pan.style.width=W+'px';bd.style.height=H+'px';
+  }else{
+   var nx=Math.max(6,Math.min(ol+dx,window.innerWidth-pan.offsetWidth-6));
+   var ny=Math.max(6,Math.min(ot+dy,window.innerHeight-46));
+   pan.style.left=nx+'px';pan.style.top=ny+'px';pan.style.right='auto';pan.style.bottom='auto';
+  }
+ });
+ var bit=function(){akt=0;};
+ h.addEventListener('pointerup',bit);h.addEventListener('pointercancel',bit);
+}
+function buyut(){
+ if(!pan)return;
+ if(!big){
+  onc={w:pan.style.width,l:pan.style.left,t:pan.style.top,r:pan.style.right,b:pan.style.bottom,bh:bd.style.height};
+  pan.style.left='2vw';pan.style.top='2vh';pan.style.right='auto';pan.style.bottom='auto';
+  pan.style.width='96vw';bd.style.height='78vh';zb.textContent='Küçült';big=1;
+ }else{
+  pan.style.width=onc.w;pan.style.left=onc.l;pan.style.top=onc.t;pan.style.right=onc.r;pan.style.bottom=onc.b;bd.style.height=onc.bh;
+  zb.textContent='Büyüt';big=0;
+ }
+}
+function kapat(){try{fr.setAttribute('src','about:blank');}catch(e169x){}pan.style.display='none';}
+function ac(o){
+ kur();if(!pan)return;
+ var src='https://www.youtube.com/embed/'+o.id+'?autoplay=1&rel=0&playsinline=1'+(o.t>0?('&start='+o.t):'');
+ pan.style.display='block';
+ fr.setAttribute('src',src);
+ try{pan.querySelector('.h b').textContent='YouTube — '+(o.url.length>44?o.url.slice(0,44)+'…':o.url);}catch(e169h){}
+}
+window.__yt169Ac=ac;window.__yt169Kapat=kapat;window.__yt169Id=idBul;
+document.addEventListener('click',function(ev){
+ try{
+  var el=ev.target;
+  if(!el||!el.closest)return;
+  var a=el.closest('a');
+  if(!a||!a.getAttribute)return;
+  if(pan&&pan.contains(a))return;
+  var href=a.getAttribute('href')||'';
+  if(!href)return;
+  var o=idBul(href);
+  if(!o)return;
+  ev.preventDefault();ev.stopPropagation();
+  ac(o);
+ }catch(e169c){}
+},true);
 })();
 </script>
 </body>
