@@ -13,6 +13,25 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Caveat&family=Dancing+Script&family=Indie+Flower&family=Lemonada&family=Lobster&family=Monoton&family=Orbitron&family=Pacifico&family=Press+Start+2P&family=Righteous&display=swap">
 <style>
 :root{--bg:#eef1f5;--bg2:#ffffff;--tx:#1f242b;--mu:#636a73;--bl:#0a86c7;--bd:#dfe3e9;--teal:#0a86c7;--red:#e5383b;--hd:#e8ecf1;--pt:#23292f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+/* v194: GECE MODU — body[data-theme="dark"] ile açılır; tüm :root değişkenleri karanlık paletle ezilir, localStorage'da saklanır */
+body[data-theme="dark"]{--bg:#0f1623;--bg2:#1a2433;--tx:#e6ebf2;--mu:#8a96a7;--bl:#4db8ff;--bd:#2a374a;--teal:#4db8ff;--red:#ff5c5c;--hd:#1a2433;--pt:#e6ebf2}
+body[data-theme="dark"]{background:var(--bg);color:var(--tx)}
+body[data-theme="dark"] .room.rcard,body[data-theme="dark"] .room.ucard,body[data-theme="dark"] .srow{background:#1a2433;border-color:#2a374a}
+body[data-theme="dark"] .room.rcard .rcol>b,body[data-theme="dark"] .room.ucard .unm b{color:#e6ebf2}
+body[data-theme="dark"] .room.ucard .unm b{color:#ff7a85}
+body[data-theme="dark"] .msg p,body[data-theme="dark"] .pvw-m p{background:var(--bg2);border-color:var(--bd);color:#dde3ec}
+body[data-theme="dark"] .ctx,body[data-theme="dark"] #mmenu84,body[data-theme="dark"] .mset{background:var(--bg2);color:var(--tx);border-color:var(--bd)}
+body[data-theme="dark"] #mmenu84>div{color:#dde3ec}
+body[data-theme="dark"] #mmenu84>div:hover{background:rgba(77,184,255,.12);color:var(--bl)}
+body[data-theme="dark"] .stage{background:radial-gradient(circle at 22% 8%,rgba(40,55,80,.55) 0 12%,transparent 34%),radial-gradient(circle at 78% 26%,rgba(30,45,70,.4) 0 10%,transparent 30%),linear-gradient(#1a2535,#0f1825)}
+body[data-theme="dark"] .top{background:var(--bg2);border-color:var(--bd)}
+body[data-theme="dark"] aside{background:var(--bg);border-color:var(--bd)}
+body[data-theme="dark"] .bar{background:var(--bg2);border-color:var(--bd)}
+body[data-theme="dark"] #mi,body[data-theme="dark"] .srch,body[data-theme="dark"] input[type=text],body[data-theme="dark"] input:not([type]){background:var(--bg);color:var(--tx);border-color:var(--bd)}
+body[data-theme="dark"] .pinh{color:var(--mu)}
+body[data-theme="dark"] .pvw-top{background:#0a6cab}
+body[data-theme="dark"] .prv-card{background:var(--bg2)}
+body[data-theme="dark"] .gate,body[data-theme="dark"] #gate{background:linear-gradient(158deg,#0c0723 0%,#130a36 46%,#0a0618 100%)}
 
 *{box-sizing:border-box}html,body{height:100%;margin:0}
 html{overflow:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}/* v125: yazı boyutu ekrana göre oynamaz */
@@ -327,6 +346,38 @@ main{flex:1;display:flex;flex-direction:column;min-width:0}
 #mmenu84>div:hover{background:#eaf3fc;color:#0a86c7}
 #mmenu84>div.wrn{color:#d63031}
 #mmenu84>div.wrn:hover{background:#fdeeee;color:#d63031}
+/* v194: MESAJ TEPKİLERİ — balonun altında küçük haplar; tıklayınca tepki ekle/kaldır */
+.mreact{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;padding-top:5px;border-top:1px solid var(--bd)}
+.mreact .rcpill{display:inline-flex;align-items:center;gap:3px;background:var(--hd);border:1px solid var(--bd);border-radius:12px;padding:2px 7px;font-size:12px;cursor:pointer;user-select:none;line-height:1.4;color:var(--tx);transition:transform .12s,background .12s}
+.mreact .rcpill:hover{transform:scale(1.08)}
+.mreact .rcpill.me{background:#e6f3fd;border-color:#b9dcf5;color:#0a6cab;font-weight:700}
+.mreact .rcpill .rcn{font-size:11px;color:var(--mu);font-weight:700}
+.mreact .rcpill.me .rcn{color:#0a6cab}
+body[data-theme="dark"] .mreact .rcpill{background:#243042;border-color:#2a374a}
+body[data-theme="dark"] .mreact .rcpill.me{background:rgba(77,184,255,.18);border-color:#4db8ff;color:#4db8ff}
+body[data-theme="dark"] .mreact .rcpill .rcn{color:#8a96a7}
+body[data-theme="dark"] .mreact .rcpill.me .rcn{color:#4db8ff}
+/* v194: TEPKİ SEÇİCİ POPUP — mesajdaki + düğmesine basınca açılan emoji sırası */
+#rcpick84{position:fixed;display:none;z-index:99995;background:var(--bg2);border:1px solid var(--bd);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.32);padding:6px;gap:2px;flex-wrap:wrap;max-width:280px}
+#rcpick84.on{display:flex}
+#rcpick84 .rcp{font-size:22px;width:34px;height:34px;display:grid;place-items:center;border-radius:8px;cursor:pointer;background:none;border:0}
+#rcpick84 .rcp:hover{background:var(--hd)}
+/* v194: mesaja + tepki ekle düğmesi */
+.maddrc{font-size:12px;color:var(--mu);background:none;border:1px dashed var(--bd);border-radius:12px;padding:2px 7px;cursor:pointer;line-height:1.4}
+.maddrc:hover{color:var(--bl);border-color:var(--bl)}
+/* v194: YAZIYOR göstergesi — yazma çubuğunun üstünde, balonun altında sürekli animasyon */
+.typing195{display:none;align-items:center;gap:6px;padding:5px 12px 0;font-size:12px;color:var(--mu);font-style:italic}
+.typing195.on{display:flex}
+.typing195 .tdot{display:inline-flex;gap:3px}
+.typing195 .tdot i{width:5px;height:5px;border-radius:50%;background:var(--bl);animation:tdbnc 1.2s infinite}
+.typing195 .tdot i:nth-child(2){animation-delay:.18s}
+.typing195 .tdot i:nth-child(3){animation-delay:.36s}
+@keyframes tdbnc{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+/* v194: DÜZENLENMİŞ işareti — düzenlenmiş mesajlarda saat yanında */
+.medt84{font-size:10.5px;color:var(--mu);font-style:italic;margin-left:4px;font-weight:400}
+/* v194: GECE MODU toggle düğmesi — üst şeritte */
+#darktog194{background:none;border:0;color:var(--tx);cursor:pointer;font-size:15px;padding:4px 8px;border-radius:8px;line-height:1}
+#darktog194:hover{background:var(--hd)}
 /* v85: alıntı kartı — balonun içinde gri yuvarlak kart (resimdeki gibi) */
 .qc84{display:flex;gap:10px;align-items:center;width:100%;box-sizing:border-box;background:#f3f1ea;border:1px solid #e6e0d0;border-radius:12px;padding:9px 12px;margin:0 0 6px}/* v92: referans kart — tam genişlik, avatar dikey ortalı */
 .qc84 .mts{align-self:flex-end;font-size:10.5px;white-space:nowrap;margin-top:3px}/* v92: tarih alt sağda */
@@ -1522,7 +1573,7 @@ body.no-fx #fx{display:none}
   <button class="fab" title="Yeni oda" id="newRoom">+</button>
 </aside>
 <main>
-  <div class="top"><button id="burger" title="Menü"><i class="fa-solid fa-bars"></i></button><div><b id="rt">Lobi</b><br><small id="rd">küfür, argo, siyaset yasak... hoş sohbetler.</small><small id="rsah122"></small></div><span id="netdg153" title="Ağ — tıkla: ayrıntı"><i></i><b>—</b></span><button id="ctidn153" title="Catıdan in — siteye gir"><i class="fa-solid fa-angles-down"></i> Catıdan İn</button><span id="tspr"><button id="sp2" title="Ses"><i class="fa-solid fa-volume-high"></i></button><button id="texit" title="Güvenli Çıkış"><i class="fa-solid fa-right-from-bracket"></i></button></span><button id="tpwr122" title="Güvenli Çıkış"><i class="fa-solid fa-power-off"></i></button><!-- v136: üst şeritteki ayarlar işareti kaldırıldı — çıkış işareti en sağda tek; tam menü sağ alt yuvarlak işaretten ve profil dişlisinden açılır -->
+  <div class="top"><button id="burger" title="Menü"><i class="fa-solid fa-bars"></i></button><div><b id="rt">Lobi</b><br><small id="rd">küfür, argo, siyaset yasak... hoş sohbetler.</small><small id="rsah122"></small></div><span id="netdg153" title="Ağ — tıkla: ayrıntı"><i></i><b>—</b></span><button id="ctidn153" title="Catıdan in — siteye gir"><i class="fa-solid fa-angles-down"></i> Catıdan İn</button><span id="tspr"><button id="sp2" title="Ses"><i class="fa-solid fa-volume-high"></i></button><button id="texit" title="Güvenli Çıkış"><i class="fa-solid fa-right-from-bracket"></i></button></span><button id="tpwr122" title="Güvenli Çıkış"><i class="fa-solid fa-power-off"></i></button><button id="darktog194" title="Gece/Gündüz Modu"><i class="fa-solid fa-moon"></i></button><!-- v194: Gece Modu toggle düğmesi — üst şeritte --><!-- v136: üst şeritteki ayarlar işareti kaldırıldı — çıkış işareti en sağda tek; tam menü sağ alt yuvarlak işaretten ve profil dişlisinden açılır -->
   </div><!-- v21: Admin Paneli dugmeleri kaldirildi — SADECE sohbet panelinde sag tik ile acilir -->
   <!-- v60: panel üstündeki mikrofon sahibi şeridi (#spk) kaldırıldı — mikrofon sahibi kullanıcı listesinde gösterilir: yeşil mikrofon işareti + listenin en üstü -->
     <div id="ctiban153"></div><div id="netwarn153"><i class="fa-solid fa-triangle-exclamation"></i><span>Gerçek bağlantı kurulamadı — otomatik yeniden bağlanılıyor… Sürerse sayfayı yenileyin veya farklı ağ (wifi/mobil) deneyin.</span></div><div id="kur122"></div><div id="mqpanel"></div>
@@ -1774,7 +1825,7 @@ window.pvNotifUI=function(){const cnt=()=>Object.keys(pvwUnread).reduce((a,k)=>a
  const wt=document.getElementById('pvwt');if(wt&&pvwOpen)wt.textContent=(pvwUnread[pvwOpen]?'('+pvwUnread[pvwOpen]+') ':'')+pvwOpen+' - Mesajlaşma';
  document.querySelectorAll('.tabs button[data-t="SOHBET"]').forEach(b=>{let nb=b.querySelector('.nbadge');if(!n){if(nb)nb.remove();return}if(!nb){nb=document.createElement('span');nb.className='nbadge';b.appendChild(nb)}nb.textContent=n});const eb=document.getElementById('pmbtn');if(eb){let nb2=eb.querySelector('.nbadge');if(!n||AY.rozet===0){if(nb2)nb2.remove()}else{if(!nb2){nb2=document.createElement('span');nb2.className='nbadge';eb.appendChild(nb2)}nb2.textContent=n}}const pdd50=document.getElementById('pmdd');if(pdd50&&pdd50.classList.contains('on')&&window.pmDropUI)pmDropUI()};
 window.pvClear=function(u){if(pvwUnread[u]){delete pvwUnread[u];window.pvNotifUI()}};
-function pushMsg(m){if(window.__kickCut153)return;/* v166: bağlantısı kesilen (ban/kick) cihaz panelde hiçbir yazı göremez ve gönderemez — ağ/db/sekme/bot yollarının tümü */if(m&&!m.sys&&m.to&&m.to==me.name&&m.who!=me.name){try{const _blk=AY.pmred===1||AY.pmwho=='kimse'||(AY.pmwho=='arkadas'&&!(state.lists['ARKADAŞLAR']||[]).includes(m.who))||(AY.offmsg===1&&document.visibilityState!='visible');if(_blk)return;/* v89: özel yazışma tercihleri */if(pvwOpen!=m.who&&AY.pmgizle!==1){pvwUnread[m.who]=(pvwUnread[m.who]||0)+1;if(window.pmBeep&&AY.zkapa!==1)window.pmBeep();if(AY.vkapa!==1&&navigator.vibrate)try{navigator.vibrate(120)}catch(_v89){}if(window.pvNotifUI)window.pvNotifUI()}}catch(e){}}try{if(m&&!m.sys&&m.to){const pe=m.who==me.name?m.to:(m.to==me.name&&m.who!=me.name?m.who:null);if(pe&&pe!=me.name)pmRec(pe,m)}}catch(e){}/* v50: yazışma kaydı — yalnız benim katıldığım özel mesajlar */if(db)db.collection('msgs').doc(Date.now()+'-'+Math.random().toString(36).slice(2,7)).set(m).catch(()=>{msgs.push(m);paint()});else{msgs.push(m);paint()}try{if(window.SYNC&&!m._loc&&!m._net98)SYNC.send('msg',m)}catch(e){}try{if(window.NET&&NET.on&&!m._net98&&!m._loc)NET.send('msg',m)}catch(e){}}/* v98: PM dahil ağa — v99: sekmelere de aynalanır */
+function pushMsg(m){if(window.__kickCut153)return;/* v166: bağlantısı kesilen (ban/kick) cihaz panelde hiçbir yazı göremez ve gönderemez — ağ/db/sekme/bot yollarının tümü */if(m&&!m.sys&&m.to&&m.to==me.name&&m.who!=me.name){try{const _blk=AY.pmred===1||AY.pmwho=='kimse'||(AY.pmwho=='arkadas'&&!(state.lists['ARKADAŞLAR']||[]).includes(m.who))||(AY.offmsg===1&&document.visibilityState!='visible');if(_blk)return;/* v89: özel yazışma tercihleri */if(pvwOpen!=m.who&&AY.pmgizle!==1){pvwUnread[m.who]=(pvwUnread[m.who]||0)+1;if(window.pmBeep&&AY.zkapa!==1)window.pmBeep();if(AY.vkapa!==1&&navigator.vibrate)try{navigator.vibrate(120)}catch(_v89){}if(window.pvNotifUI)window.pvNotifUI()}}catch(e){}}/* v194: arkadaş odaya girince özel bildirim sesi */try{if(m&&m.sys&&m.who&&m.who!=me.name&&m.act=='odaya katıldı'&&(state.lists['ARKADAŞLAR']||[]).includes(m.who)){if(window.__beep194&&AY&&AY.zkapa!==1)window.__beep194('friend');if(AY&&AY.vkapa!==1&&navigator.vibrate)try{navigator.vibrate(60)}catch(_f194){}}}catch(e194fr){}try{if(m&&!m.sys&&m.to){const pe=m.who==me.name?m.to:(m.to==me.name&&m.who!=me.name?m.who:null);if(pe&&pe!=me.name)pmRec(pe,m)}}catch(e){}/* v50: yazışma kaydı — yalnız benim katıldığım özel mesajlar */if(db)db.collection('msgs').doc(Date.now()+'-'+Math.random().toString(36).slice(2,7)).set(m).catch(()=>{msgs.push(m);paint()});else{msgs.push(m);paint()}try{if(window.SYNC&&!m._loc&&!m._net98)SYNC.send('msg',m)}catch(e){}try{if(window.NET&&NET.on&&!m._net98&&!m._loc)NET.send('msg',m)}catch(e){}}/* v98: PM dahil ağa — v99: sekmelere de aynalanır */
 function sysSay(t,rid){pushMsg({text:t,ts:Date.now(),rid:rid??state.rooms[state.cur].id,uid:'sys',who:'Sistem'})}
 function welcomeMsg(x){const w=state.welcome;if(w.on&&w.text.trim())sysSay(w.text.replace(/\[username\]|\{rumuz\}/gi,me.name),x.id)}
 function wipeMsgs(){if(db)msgs.forEach(m=>m._id&&db.collection('msgs').doc(m._id).delete().catch(()=>{}));msgs.length=0;paint()}
@@ -2166,6 +2217,9 @@ window.SYNC=(function(){
     else if(t.k=='bye'){const n99=PEER[t.tab]&&PEER[t.tab].n;delete PEER[t.tab];const ru=t.d&&t.d.rid&&state.roomUsers[t.d.rid];if(ru)state.roomUsers[t.d.rid]=ru.filter(u=>u!=t.d.n||u==me.name);rostRefresh();if(n99)try{note(n99+' odadan çıktı')}catch(e){}try{if(window.LOC98)LOC98.drop(t.tab)}catch(e){}}
     else if(t.k=='rtc'){try{if(window.LOC98)LOC98.rtc(t.tab,t.d)}catch(e){}}/* v99: yerel ses sinyali (offer/answer/ice) */
     else if(t.k=='fx'){try{FXE119(t.d)}catch(e){}}/* v119: kutlama/hediye/flashkick efektleri */else if(t.k=='cfg'){try{cfgUygula132(t.d&&t.d.k,t.d&&t.d.v)}catch(e133z){}}/* v133: sekme ayar rölesi */else if(t.k=='mod'){try{modGel137(t.d)}catch(e137m){}}/* v137: yönlü moderasyon rölesi — uyarı ve ışınlanma hedefe doğrudan gider */
+    else if(t.k=='react'){try{rcApply194(t.d)}catch(e194r){}}/* v194: mesaj tepkisi (emoji) — sekme içi */
+    else if(t.k=='msgedit'){try{editApply194(t.d)}catch(e194e){}}/* v194: mesaj düzenle/sil — sekme içi */
+    else if(t.k=='typing'){try{typRecv194(t.d)}catch(e194t){}}/* v194: yazıyor göstergesi — sekme içi */
    }catch(e){}};
   const send=(k,d)=>{const t={id:TAB+'-'+(++seq),tab:TAB,k:k,d:d,ts:Date.now()};
    try{bc&&bc.postMessage(t)}catch(e){}
@@ -2279,7 +2333,12 @@ lSt188.onMessage=function(d,meta){try{stFx188(d,meta&&meta.peerId)}catch(e188j){
  function wireRoom(rid){
   const room=S.api.joinRoom({appId:APP,rtcConfig:ICE153,relayConfig:{urls:REL153,redundancy:14}},'oda-'+rid);/* v153j: aynı relay seti + ICE — her cihaz aynı ağa girer */
   const aHi=room.makeAction('hi'),aMsg=room.makeAction('msg'),aMic=room.makeAction('micst'),aFx=room.makeAction('fxev'),aCfg=room.makeAction('cfgev'),aMod=room.makeAction('modev'),aSs=room.makeAction('ssv147');/* v148SS: ekran yayını durum kanalı *//* v119+v133: cfgev — ayar rölesi; v137: modev — yönlü komut rölesi */
-  S.fns={sendHi:function(d,t){try{if(d&&!d.dv)d.dv={d:devId(),f:fpId()};t?aHi.send(d,{target:t}):aHi.send(d)}catch(e){}},sendMsg:function(d){try{aMsg.send(d)}catch(e){}},sendMic:function(d){try{aMic.send(d)}catch(e){}},sendFx:function(d){try{aFx.send(d)}catch(e){}},sendCfg:function(d,t){try{t?aCfg.send(d,{target:t}):aCfg.send(d)}catch(e){}},sendMod:function(d){try{aMod.send(d)}catch(e137f){}},sendSs:function(d,t){try{t?aSs.send(d,{target:t}):aSs.send(d)}catch(e147w){}}};/* v148SS *//* v119+v137 */try{aCfg.onMessage=function(d){try{if(d&&d.k&&d.ts&&Date.now()-d.ts<20000)cfgUygula132(d.k,d.v)}catch(e133x){}}}catch(e133y){}/* v153z: oda cfg kanalında da eski olay tekrarı koruması */try{aMod.onMessage=function(d){try{if(d)modGel137(d)}catch(e137n){}}}catch(e137o){}try{aSs.onMessage=function(d){try{if(typeof ssNet147=='function')ssNet147(d)}catch(e147m){}}}catch(e147q){}/* v148SS: alıcı ekran izleyicisini açar/kapatır *//* v133: ayar; v137: yönlü komut karşı cihazda uygulanır (yeniden yayınlanmaz — döngü yok) */
+  /* v194: mesaj tepkisi/düzenle/yazıyor için yeni aksiyonlar — NET (Trystero) üzerinden tüm odalara */
+  const aRc194=room.makeAction('react194'),aEd194=room.makeAction('msgedit194'),aTyp194=room.makeAction('typing194');
+  S.fns={sendHi:function(d,t){try{if(d&&!d.dv)d.dv={d:devId(),f:fpId()};t?aHi.send(d,{target:t}):aHi.send(d)}catch(e){}},sendMsg:function(d){try{aMsg.send(d)}catch(e){}},sendMic:function(d){try{aMic.send(d)}catch(e){}},sendFx:function(d){try{aFx.send(d)}catch(e){}},sendCfg:function(d,t){try{t?aCfg.send(d,{target:t}):aCfg.send(d)}catch(e){}},sendMod:function(d){try{aMod.send(d)}catch(e137f){}},sendSs:function(d,t){try{t?aSs.send(d,{target:t}):aSs.send(d)}catch(e147w){}},sendRc194:function(d){try{aRc194.send(d)}catch(e){}},sendEd194:function(d){try{aEd194.send(d)}catch(e){}},sendTyp194:function(d){try{aTyp194.send(d)}catch(e){}}};/* v148SS *//* v119+v137+v194 */try{aCfg.onMessage=function(d){try{if(d&&d.k&&d.ts&&Date.now()-d.ts<20000)cfgUygula132(d.k,d.v)}catch(e133x){}}}catch(e133y){}/* v153z: oda cfg kanalında da eski olay tekrarı koruması */try{aMod.onMessage=function(d){try{if(d)modGel137(d)}catch(e137n){}}}catch(e137o){}try{aSs.onMessage=function(d){try{if(typeof ssNet147=='function')ssNet147(d)}catch(e147m){}}}catch(e147q){}/* v148SS: alıcı ekran izleyicisini açar/kapatır *//* v133: ayar; v137: yönlü komut karşı cihazda uygulanır (yeniden yayınlanmaz — döngü yok) */
+  try{aRc194.onMessage=function(d){try{rcApply194(d)}catch(e194r2){}}}catch(e194r3){}/* v194: mesaj tepkisi — gerçek P2P ile karşı odada */
+  try{aEd194.onMessage=function(d){try{editApply194(d)}catch(e194e2){}}}catch(e194e3){}/* v194: mesaj düzenle/sil — gerçek P2P ile karşı odada */
+  try{aTyp194.onMessage=function(d){try{typRecv194(d)}catch(e194t2){}}}catch(e194t3){}/* v194: yazıyor göstergesi — gerçek P2P ile karşı odada */
   room.onPeerJoin=function(pid){try{S.fns.sendHi({n:me.name,sx:usex(me.name),sy:{sys:state.micSys,def:state.micDef},ur:myU129(),cti:CTI153.me,rk:ctiRank153(me.name)},pid);try{if(!me.misafir&&(me.owner||can(3))){S.fns.sendCfg({k:'sec',v:{v:SC,c:BC},ts:Date.now()},pid);S.fns.sendCfg({k:'bans',v:{ip:state.bans.ip,dev:state.bans.dev},ts:Date.now()},pid)}}catch(e153rp){}/* v161: odaya katılan eşe güncel cihaz ban listesi de itilir *//* v153x: odaya katılan eşe hedefli güvenlik ayarı itme — herkes için aynı kural *//* v129: yeni katılan cihaza üye kaydı da gider */if(S.micS)try{room.addStream(S.micS,{target:pid})}catch(e){}if(S.ssS)try{room.addStream(S.ssS,{target:pid})}catch(e){}try{if(S.ssS&&S.fns&&S.fns.sendSs)S.fns.sendSs({on:1,n:me.name,mm:(window.SS177?window.SS177.mm:'norm')},pid)/* v177: sonradan giren eşe güncel ekran görünümü de gider */}catch(e147j){}/* v148SS: odaya sonradan giren de ekranı görür */}catch(e){}};
   room.onPeerLeave=function(pid){try{const inf=S.names.get(pid)||{};const dkL165=dvOf165(pid);S.names.delete(pid);dropA(pid);try{if(S.stD165)Object.keys(S.stD165).forEach(function(k165){if(S.stD165[k165]==pid||k165.indexOf(dkL165+'|')==0)delete S.stD165[k165]})}catch(e165L){}/* v165: giden kişinin akış tekilleştirme kaydı silinir */try{if(typeof ssLeft147=='function')ssLeft147(pid)}catch(e){}/* v148SS */try{if(inf.n&&!Array.from(S.names.values()).some(function(v188g){return v188g&&v188g.n==inf.n})){let h130=0;Object.values(state.micSys).forEach(function(s){if(!s)return;const a130=s.holders?s.holders.indexOf(inf.n):-1;if(a130>=0){s.holders.splice(a130,1);h130=1}const b130=s.q?s.q.indexOf(inf.n):-1;if(b130>=0){s.q.splice(b130,1);h130=1}});if(h130)saveWK()}}catch(e){}/* v188: aynı rumuz başka bağlantıda yaşıyorsa koltuğu silme (mesh müzakeresinde yanlış düşme engellenir) */try{micHeal188()}catch(e188h){}/* v130: çıkan kişinin koltuğu ve sırası anında boşalır */if(inf.n&&!Array.from(S.names.values()).some(function(x165){return x165&&x165.n==inf.n}))note(inf.n+' odadan çıktı');rostRefresh()}catch(e){}};/* v165: çıkış duyurusu kişi bütün taşıyıcılardan çekilince bir kez düşer */
   room.onPeerStream=function(stream,pid){try{const vi165=stream&&stream.getVideoTracks&&stream.getVideoTracks().length;if(!stw165(pid,vi165?'ss':'mic'))return;/* v165: ikiz API yolunun ikinci akışı alınmaz */if(vi165){try{if(typeof ssIn147=='function')ssIn147(stream,pid)}catch(e147v){}return}playA(pid,stream)}catch(e147u){try{playA(pid,stream)}catch(e147x){}}};/* v148SS: video izli gelen akış=ekran paylaşımı, salt ses=mikrofon */
@@ -2298,7 +2357,7 @@ lSt188.onMessage=function(d,meta){try{stFx188(d,meta&&meta.peerId)}catch(e188j){
   try{wireRoom(rid)}catch(e){S.err=String(e).slice(0,220);S.room=null}
   try{if(S.lob&&S.lhi&&S.on)S.lhi({n:me.name,sx:usex(me.name),cti:CTI153.me,rk:ctiRank153(me.name),rid:rid})}catch(e){}/* v179: oda değişimi LOBİYE HEMEN duyurulur — TÜM KİŞİLER listesindeki oda adı telefon+PC her cihazda anında güncellenir; eski akışta duyuru ancak bir başkası duyurursa 400 ms el sıkışma cevabıyla (4 sn kısıtlı) yayılabiliyordu */
  }
- function send(k,d){try{if(!S.room||!S.fns)return;if(k=='msg')S.fns.sendMsg(d);else if(k=='mic')S.fns.sendMic(d);else if(k=='fx')S.fns.sendFx(d);else if(k=='cfg')S.fns.sendCfg(d)/* v119+v133: ayar yayını */;else if(k=='mod')S.fns.sendMod(d)/* v137: yönlü komut yayını */}catch(e){}}
+ function send(k,d){try{if(!S.room||!S.fns)return;if(k=='msg')S.fns.sendMsg(d);else if(k=='mic')S.fns.sendMic(d);else if(k=='fx')S.fns.sendFx(d);else if(k=='cfg')S.fns.sendCfg(d)/* v119+v133: ayar yayını */;else if(k=='mod')S.fns.sendMod(d)/* v137: yönlü komut yayını */;else if(k=='react')S.fns.sendRc194(d)/* v194: tepki yayını */;else if(k=='msgedit')S.fns.sendEd194(d)/* v194: düzenle/sil yayını */;else if(k=='typing')S.fns.sendTyp194(d)/* v194: yazıyor yayını */}catch(e){}}
  function roster(rid){const out=[me.name];S.names.forEach(function(v){if(v.n&&out.indexOf(v.n)<0)out.push(v.n)});try{return out.filter(function(x162){return gor162(x162)})}catch(e162r){return out}}/* v162: oda kadrosu da rutbe gorunurluk kuralina uyar */
  function has(n){let f=false;S.names.forEach(function(v){if(v.n==n)f=true});return f}
  function sex(n){let s='m';S.names.forEach(function(v){if(v.n==n&&v.sx)s=v.sx});return s}
@@ -2356,7 +2415,7 @@ function qb84Ensure(pm){const id=pm?'qbarp84':'qbar84';let b=document.getElement
 function qbarShow84(pm){const q=pm?pqp84:pq84;if(!q)return;const b=qb84Ensure(pm);if(!b)return;b.style.display='flex';b.innerHTML=qcard84(q)+'<button class="qbx84" title="Alıntıyı kaldır"><i class="fa-solid fa-xmark"></i></button>';b.querySelector('.qbx84').onclick=()=>{if(pm)pqp84=null;else pq84=null;b.style.display='none'}}
 function qbarClear84(pm){const b=document.getElementById(pm?'qbarp84':'qbar84');if(b)b.style.display='none'}
 function mRow77(m){let _mz160=false;try{_mz160=mut.has(m.who)||mut.has((m.rid??m.room+1)+':'+m.who)}catch(e160m){}const nc=' class="mn'+rflB182(m.who)+(_mz160?' scz160':'')+fxCls(m.who)+gCls(m.who)+'"'+(fSty(m.who)?' style="'+fSty(m.who)+'"':'');/* v160: susturulan kişinin rumuzu mesajlarda kırmızı çizgili */
- return av({k:m.who},42)+'<p><b'+nc+'>'+esc(m.who)+'</b><span class="msep">:</span> '+qcard84(m.qt)+kb52(m)+msgHTML(m)+'<time class="mts">'+mTs77(m.ts)+'</time></p>'+mdots84(m)}
+ return av({k:m.who},42)+'<p><b'+nc+'>'+esc(m.who)+'</b><span class="msep">:</span> '+qcard84(m.qt)+kb52(m)+msgHTML(m)+'<time class="mts">'+mTs77(m.ts)+'</time>'+(m.edt194?'<span class="medt84">(düzenlendi)</span>':'')+mdots84(m)+rcRow194(m)+'</p>'}/* v194: mesaj altında tepki hapları + (düzenlendi) işareti */
 const __yetkili171=()=>{try{return !!(me.owner||rankIdx(me.name)>0)}catch(e171y){return false}};/* v171: yetkili görebilirlik — üye ve misafir giriş duyurusunu göremez */
 window.__IN173=window.__IN173||new Set();window.__C173=window.__C173||new Set();/* v173: iniş bilinenler / catı aşamasındakiler (normalize rumuz) */
 function cati173(u){try{const k=nrmN153(u);if(window.__IN173&&window.__IN173.has(k))return 0;return !!(ctiDur153(u)||(window.__C173&&window.__C173.has(k)))}catch(e173h){return !!ctiDur153(u)}}/* v173: kisinin ETKİN catı durumu — iniş duyurusu (in173) geldiyse catıdan inmiş sayılır, presence gecikmesi beklenmez */
@@ -2402,6 +2461,9 @@ m.innerHTML='<div data-m84="profil"><i class="fa-solid fa-user"></i><span>Profil
 +'<div data-m84="sil"><i class="fa-solid fa-trash-can"></i><span>Benden sil</span></div>'
 +'<div data-m84="kopya"><i class="fa-solid fa-copy"></i><span>Kopyala</span></div>'
 +'<div data-m84="alinti"><i class="fa-solid fa-reply"></i><span>Alıntı ile cevapla</span></div>'
++'<div data-m84="tepgor"><i class="fa-solid fa-thumbs-up"></i><span>Tepki Gönder</span></div>'/* v194: Tepki (emoji reaksiyon) seçici aç */
++'<div data-m84="duzenle" class="duz194"><i class="fa-solid fa-pen"></i><span>Düzenle</span></div>'/* v194: kendi mesajını 5 dk içinde düzenle */
++'<div data-m84="silben" class="duz194 wrn"><i class="fa-solid fa-eraser"></i><span>Herkesten Sil</span></div>'/* v194: kendi mesajını herkes için sil */
 +'<div data-m84="sikayet" class="wrn"><i class="fa-solid fa-triangle-exclamation"></i><span>Şikayet Et</span></div>';
 document.body.appendChild(m);
 m.addEventListener('click',e=>{const d=e.target.closest('[data-m84]');if(d){e.stopPropagation();mmAct84(d.dataset.m84)}});
@@ -2409,6 +2471,8 @@ return m}
 function mmOpen84(btn,fromPm){const k=btn.dataset.mk;if(!k)return;const m=msgs.slice().reverse().find(x=>mk84(x)==k);if(!m)return;
 mm84={u:m.who||'',k:k,t:m.text||'',pm:fromPm?1:0,m:m};
 const mm=mmBuild84();mm.classList.add('on');
+/* v194: kendi mesajı DEĞİL ise Düzenle/Herkesten Sil gizlenir */
+try{const isMine=(m.who==me.name);mm.querySelectorAll('.duz194').forEach(el=>el.style.display=isMine?'':'none');const okDuz=isMine&&m.text&&m.ts&&(Date.now()-m.ts<300000);const okSil=isMine&&m.ts&&(Date.now()-m.ts<300000);const dDuz=mm.querySelector('[data-m84="duzenle"]');if(dDuz)dDuz.style.display=okDuz?'':'none';const dSil=mm.querySelector('[data-m84="silben"]');if(dSil)dSil.style.display=okSil?'':'none'}catch(e194duz){}
 const r=btn.getBoundingClientRect(),w=mm.offsetWidth,h=mm.offsetHeight;
 let L=r.right+6;if(L+w>innerWidth-6)L=r.left-w-6;if(L<6)L=6;
 let T=r.bottom+4;if(T+h>innerHeight-6)T=Math.max(6,r.top-h-4);
@@ -2421,9 +2485,58 @@ if(a=='profil')showProfile(u);
 else if(a=='sil'){del84.add(mm84.k);try{if(pvwOpen)window.__pvwPaint()}catch(e){}paint();note('Mesaj senden silindi')}
 else if(a=='kopya')mmCopy84(mm84.t||'(medya)');
 else if(a=='alinti'){const o={w:u,t:mm84.m?mm84.m.ts:0,x:mm84.t||'',k:(mm84.m&&mm84.m.kime)||''};if(mm84.pm){pqp84=o;qbarShow84(1);const i=document.getElementById('pvwi');if(i)i.focus()}else{pq84=o;qbarShow84(0);const i=document.getElementById('mi');if(i)i.focus()}}
+else if(a=='tepgor'){try{rcPick84Open(mm84.m,mm84.pm)}catch(e194rc){}}
+else if(a=='duzenle'){try{mmEdit84(mm84.m,mm84.pm)}catch(e194ed){}}
+else if(a=='silben'){try{mmSil84(mm84.m)}catch(e194sd){}}
 else if(a=='sikayet'){state.reports=state.reports||{user:[],msg:[]};const rn=state.rooms[state.cur].n;state.reports.user.unshift({by:me.name,tg:u,ts:Date.now(),room:rn});if(mm84.t)state.reports.msg.unshift({by:me.name,tg:u,tx:mm84.t,ts:Date.now(),room:rn});saveWK();note('Şikayet gönderildi')}}
 document.addEventListener('click',e=>{const b=e.target.closest('.mdots');if(b){e.stopPropagation();e.preventDefault();mmOpen84(b,!!e.target.closest('#pvw'));return}const mm=document.getElementById('mmenu84');if(mm&&mm.classList.contains('on')&&!e.target.closest('#mmenu84'))mm.classList.remove('on')},true);
 document.addEventListener('keydown',e=>{if(e.key=='Escape')mmClose84()});
+
+/* ===== v194: MESAJ TEPKİLERİ — emoji reaksiyonları ===== */
+const RC194_EMOJIS=['👍','❤️','😂','😮','😢','🙏','👏','🔥','🎉','💯'];
+function rcStateInit194(){if(!window.RC194)window.RC194={};return window.RC194}
+function rcKey194(m){if(!m)return '';return (m.ts||0)+'|'+(m.who||'')}
+function rcRow194(m){if(!m||m.sys||m.to)return '';/* v194: özel mesaj ve sistem mesajında tepki yok */const S=rcStateInit194();const k=rcKey194(m);const r=S[k]||{};const keys=Object.keys(r);if(!keys.length){return '<span class="maddrc" data-rcadd="'+esc(k)+'" title="Tepki ekle">+</span>'}let html='<div class="mreact">';keys.forEach(e=>{const list=r[e]||[];if(!list.length)return;const me2=list.includes(me.name);html+='<span class="rcpill'+(me2?' me':'')+'" data-rc="'+esc(e)+'" data-rck="'+esc(k)+'" title="'+esc(list.join(', '))+'">'+e+'<span class="rcn">'+list.length+'</span></span>'});html+='<span class="maddrc" data-rcadd="'+esc(k)+'" title="Tepki ekle">+</span></div>';return html}
+function rcToggle194(m,emoji){if(!m||!emoji)return;const S=rcStateInit194();const k=rcKey194(m);if(!S[k])S[k]={};const list=S[k][emoji]||[];const i=list.indexOf(me.name);if(i>=0)list.splice(i,1);else list.push(me.name);if(list.length)S[k][emoji]=list;else delete S[k][emoji];rcSave194()}
+function rcSave194(){try{localStorage.setItem('ac_react_v194',JSON.stringify(window.RC194||{}))}catch(e){}}
+function rcLoad194(){try{window.RC194=JSON.parse(localStorage.getItem('ac_react_v194')||'{}')||{}}catch(e){window.RC194={}}}
+rcLoad194();
+function rcPick84Open(m,fromPm){mmClose84();let p=document.getElementById('rcpick84');if(!p){p=document.createElement('div');p.id='rcpick84';document.body.appendChild(p);p.addEventListener('click',e=>{const b=e.target.closest('.rcp');if(!b)return;e.stopPropagation();rcToggle194(m,b.textContent);rcPick84Close();paint();try{if(window.SYNC)SYNC.send('react',{k:rcKey194(m),e:b.textContent,u:me.name,ts:Date.now()})}catch(e194y){}});document.addEventListener('click',ev=>{if(!ev.target.closest('#rcpick84')&&!ev.target.closest('.maddrc')&&!ev.target.closest('[data-m84="tepgor"]'))rcPick84Close()},{once:true})}
+p.innerHTML=RC194_EMOJIS.map(e=>'<button class="rcp">'+e+'</button>').join('');
+p.classList.add('on');
+const r=(document.querySelector('[data-mk="'+esc(rcKey194(m))+'"]')||document.querySelector('.mdots')).getBoundingClientRect();
+let L=r.right+4;if(L+p.offsetWidth>innerWidth-6)L=Math.max(6,r.left-p.offsetWidth-4);let T=r.bottom+4;if(T+p.offsetHeight>innerHeight-6)T=Math.max(6,r.top-p.offsetHeight-4);p.style.left=L+'px';p.style.top=T+'px'}
+function rcPick84Close(){const p=document.getElementById('rcpick84');if(p)p.classList.remove('on')}
+/* Tepki tıklama delegesi — balonun içindeki haplara */
+document.addEventListener('click',e=>{const pill=e.target.closest('.rcpill');if(pill){e.stopPropagation();const k=pill.dataset.rck,e=pill.dataset.rc;if(!k||!e)return;const m=msgs.find(x=>rcKey194(x)==k);if(!m)return;rcToggle194(m,e);paint();try{if(window.SYNC)SYNC.send('react',{k,e,u:me.name,ts:Date.now()})}catch(e194p){}return}const add=e.target.closest('.maddrc');if(add){e.stopPropagation();const k=add.dataset.rcadd;if(!k)return;const m=msgs.find(x=>rcKey194(x)==k);if(!m)return;rcPick84Open(m,0)}},true);
+/* P2P: dış cihazdan gelen tepki */
+try{const _onSync194=window.SYNC&&SYNC.on;if(window.SYNC){const _origSend=SYNC.send;if(!window.__rc194Hook){window.__rc194Hook=1}}if(window.SYNC&&SYNC.onMsg&&!window.__rc194Hook){window.__rc194Hook=1}}catch(e){}
+function rcApply194(d){if(!d||!d.k||!d.e||!d.u)return;const S=rcStateInit194();if(!S[d.k])S[d.k]={};const list=S[d.k][d.e]||[];const i=list.indexOf(d.u);if(i>=0)list.splice(i,1);else list.push(d.u);if(list.length)S[d.k][d.e]=list;else delete S[d.k][d.e];rcSave194();try{paint()}catch(e194pa){}}
+
+/* ===== v194: MESAJ DÜZENLEME — kendi mesajını 5 dk içinde düzenle ===== */
+function mmEdit84(m,fromPm){if(!m||m.who!=me.name)return;if(!m.text)return;if(Date.now()-m.ts>300000)return note('Düzenleme süresi doldu (5 dk)');mmClose84();const inp=document.getElementById(fromPm?'pvwi':'mi');if(!inp){note('Yazma kutusu bulunamadı');return}inp.value=m.text;inp.focus();inp.dataset.edit194=m.ts+'|'+m.who;inp.placeholder='Düzenleniyor: "'+m.text.slice(0,40)+'" — Enter ile kaydet, Esc ile iptal';const restore=()=>{inp.value='';delete inp.dataset.edit194;inp.placeholder='Mesaj...';inp.removeEventListener('keydown',onKey)};const onKey=ev=>{if(ev.key=='Escape'){ev.preventDefault();restore();return}if(ev.key=='Enter'&&!ev.shiftKey){ev.preventDefault();const v=inp.value.trim();if(!v){restore();return}m.text=v;m.edt194=1;restore();paint();try{if(window.SYNC)SYNC.send('msgedit',{k:rcKey194(m),t:v,u:me.name,ts:Date.now()})}catch(e194es){}try{if(window.NET&&NET.on)NET.send('msgedit',{k:rcKey194(m),t:v,u:me.name,ts:Date.now()})}catch(e194en){}note('Mesaj düzenlendi')}};inp.addEventListener('keydown',onKey);setTimeout(()=>{const len=inp.value.length;if(inp.setSelectionRange)try{inp.setSelectionRange(len,len)}catch(e){}},0)}
+function mmSil84(m){if(!m||m.who!=me.name)return;if(Date.now()-m.ts>300000)return note('Silme süresi doldu (5 dk)');mmClose84();m._del194=1;m.text='🗑 Bu mesaj silindi';m.edt194=1;paint();try{if(window.SYNC)SYNC.send('msgedit',{k:rcKey194(m),t:'🗑 Bu mesaj silindi',del:1,u:me.name,ts:Date.now()})}catch(e194ss){}try{if(window.NET&&NET.on)NET.send('msgedit',{k:rcKey194(m),t:'🗑 Bu mesaj silindi',del:1,u:me.name,ts:Date.now()})}catch(e194sn){}note('Mesaj herkesten silindi')}
+function editApply194(d){if(!d||!d.k||!d.t)return;const m=msgs.find(x=>rcKey194(x)==d.k);if(!m)return;m.text=d.t;if(d.del)m._del194=1;else m.edt194=1;try{paint()}catch(e194ep){}}
+
+/* ===== v194: YAZIYOR... (Typing Indicator) — P2P + UI ===== */
+const TYP194={users:{},tid:0};
+function typSend194(to){try{if(!window.SYNC)return;if(!me||!me.name)return;SYNC.send('typing',{u:me.name,to:to||'',ts:Date.now()})}catch(e){}try{if(window.NET&&NET.on)NET.send('typing',{u:me.name,to:to||'',ts:Date.now()})}catch(e2){}}
+function typRecv194(d){if(!d||!d.u||d.u==me.name)return;TYP194.users[d.u]=d.ts||Date.now();typRender194()}
+function typRender194(){const now=Date.now();let html='';const names=[];Object.keys(TYP194.users).forEach(u=>{if(now-TYP194.users[u]<4000)names.push(u);else delete TYP194.users[u]});const bar=document.getElementById('typing195');if(!bar){if(!names.length)return;const b=document.createElement('div');b.id='typing195';b.className='typing195 on';const host=document.getElementById('mi')&&document.getElementById('mi').closest('.bar');if(host)host.parentNode.insertBefore(b,host);else return;b.innerHTML='<span class="tdot"><i></i><i></i><i></i></span> <span class="tn">'+esc(names.join(', '))+'</span> yazıyor...';return}if(!names.length){bar.classList.remove('on');return}bar.classList.add('on');bar.innerHTML='<span class="tdot"><i></i><i></i><i></i></span> <span class="tn">'+esc(names.join(', '))+'</span> yazıyor...'}
+function typTick194(){typRender194();TYP194.tid=setTimeout(typTick194,1500)}
+typTick194();
+function typHookInput194(){const mi=document.getElementById('mi');if(!mi||mi.dataset.typ194)return;mi.dataset.typ194=1;let last=0;mi.addEventListener('input',()=>{const n=Date.now();if(n-last>1500){last=n;typSend194(0)}});const pv=document.getElementById('pvwi');if(pv&&!pv.dataset.typ194){pv.dataset.typ194=1;let lp=0;pv.addEventListener('input',()=>{const n=Date.now();if(n-lp>1500){lp=n;typSend194(pvwOpen||'')}})}}
+setTimeout(typHookInput194,1500);
+
+/* ===== v194: BİLDİRİM SESLERİ — PM, @bahsetme, arkadaş girişi ===== */
+window.__beep194=function(kind){try{if(AY&&AY.zkapa===1)return;const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const c=window.__pmAC||(window.__pmAC=new AC());if(c.state=='suspended')c.resume().catch(()=>{});const t=c.currentTime;const cfg=kind=='pm'?{f:[660,880],d:.18,v:.13}:kind=='mention'?{f:[523,784,1046],d:.13,v:.11}:kind=='friend'?{f:[440,550,660],d:.14,v:.10}:{f:[600],d:.10,v:.09};const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';cfg.f.forEach((f,i)=>o.frequency.setValueAtTime(f,t+i*cfg.d));g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(cfg.v,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+cfg.f.length*cfg.d+.05);o.start(t);o.stop(t+cfg.f.length*cfg.d+.08)}catch(e){}};
+
+/* ===== v194: GECE MODU — toggle + localStorage ===== */
+function darkApply194(on){document.body.dataset.theme=on?'dark':'light';const i=document.querySelector('#darktog194 i');if(i){i.className=on?'fa-solid fa-sun':'fa-solid fa-moon'}try{const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=on?'#0f1623':'#eef1f5'}catch(e){}}
+function darkToggle194(){const on=document.body.dataset.theme!='dark';darkApply194(on);try{localStorage.setItem('ac_dark_v194',on?'1':'0')}catch(e){}}
+try{(function(){const v=localStorage.getItem('ac_dark_v194');if(v=='1')darkApply194(1);const t=document.getElementById('darktog194');if(t)t.addEventListener('click',darkToggle194)})()}catch(e){}
+document.addEventListener('DOMContentLoaded',()=>{try{const v=localStorage.getItem('ac_dark_v194');if(v=='1')darkApply194(1);const t=document.getElementById('darktog194');if(t)t.addEventListener('click',darkToggle194)}catch(e){}});
+
 /* ===== ALEMSİN ÇOKLU MİKROFON HİBRİT SİSTEM (v5) — başlıyor ===== */
 state.micSys=state.micSys||{};state.micDef=state.micDef||5;state.polls=state.polls||{};state.gcount=state.gcount||{};
 /* v67: 30 canlı hediye — 10 sesli + 20 sessiz, hepsi hareketli (canlı) görüntülü; 4. öğe animasyon/ses anahtarı */
