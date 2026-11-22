@@ -1153,6 +1153,10 @@ aside .me{cursor:pointer}
 #hesavw76 .av{width:90px;height:90px;border-radius:50%;overflow:hidden;background:#e8e2d4;font-size:34px}
 #hesapen76{right:-4px;bottom:2px;background:#0a86c7;color:#fff;border:2px solid var(--bg)}
 #hesname76{text-align:center;padding:8px 12px 9px;font-size:16.5px;font-weight:800}
+#hesayar194bar{padding:0 12px 10px;display:flex;justify-content:center;flex:none}/* v194-şablon: Ayarlar düğme kabı — profil adının altında ortalı */
+#hesayar194bar button{display:inline-flex;align-items:center;gap:8px;background:#2f7cf6;color:#fff;border:0;border-radius:9px;padding:9px 22px;font:600 13px system-ui;cursor:pointer;box-shadow:0 3px 10px rgba(47,124,246,.3);transition:transform .12s,box-shadow .12s}
+#hesayar194bar button:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(47,124,246,.4)}
+#hesayar194bar button i{font-size:14px}
 .hrk76{color:#1ea94c}
 #hestabs76{display:flex;gap:3px;padding:9px 10px;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);flex:none;overflow-x:auto}
 #hestabs76 button{flex:1;white-space:nowrap;background:var(--bg2);border:1px solid var(--bd);border-radius:9px;padding:8px 5px;font:600 10.5px Arial;color:var(--tx);cursor:pointer}
@@ -3594,6 +3598,7 @@ w.innerHTML='<div class="win76"><div class="wh76"><span>'+(me.misafir&&!me.owner
 '<div id="heshd76"><div id="heskapak76"><div id="heskapak76bg">'+h76KapakImg()+'</div><button class="hpen76" id="heskpen76" title="Kapak Fotoğrafı"><i class="fa-solid fa-pencil"></i></button></div>'+
 '<div id = "hesavw76"><span class = "av">'+av({k:me.name},88,'#e8e2d4')+'</span><button class = "hpen76" id = "hesapen76" title = "Profil Fotoğrafı"><i class = "fa-solid fa-pencil"></i></button></div>'+
 '<div id="hesname76">'+esc(me.name)+(showRk?' <span class="hrk76">('+esc(rk)+')</span>':'')+'</div></div>'+
+'<div id = "hesayar194bar"><button id = "hesayar194btn" title = "Ayarlar"><i class = "fa-solid fa-gear"></i> Ayarlar</button></div>'/* v194-şablon: Üye hesabım verileri Ayarlar düğmesi — tıklayınca bu pencere kapanır, 2. resimdeki ayarlar açılır */+
 '<div id="hestabs76"><button data-h76="pro" class="on">Profilim</button>'+(me.misafir&&!me.owner?'':'<button data-h76="sif">Şifre</button><button data-h76="ruz">Rumuz Değiştir</button>')+'<button data-h76="iko">İkonlar</button>'+(me.misafir&&!me.owner?'':'<button data-h76="don">Hesap Dondurma</button>')+'</div>'/* v180: misafirde Profilim+İkonlar; üyede beş sekme hemen */+
 '<div id = "hesbody76"></div><div id = "hesbar181"><button id = "hb_kapat181" title = "Pencereyi Kapat"><i class = "fa-solid fa-xmark"></i> Kapat</button><button id = "hb_kaydet181" title = "Kaydet"><i class = "fa-solid fa-floppy-disk"></i> KAYDET</button></div></div>'/* v181: telefon alt barı — Kapat + KAYDET yapışkan */;
 document.getElementById('hesx76').onclick=()=>{w.style.display='none'};
@@ -3603,6 +3608,7 @@ w.addEventListener('click',e=>{if(e.target.id==='hesov76')w.style.display='none'
 document.getElementById('heskpen76').onclick=h76KpfOpen;
 document.getElementById('hesapen76').onclick=h76PfpOpen;
 w.querySelectorAll('#hestabs76 button').forEach(b=>{b.onclick=()=>h76Tab(b.dataset.h76)});
+const _ayBtn194=document.getElementById('hesayar194btn');if(_ayBtn194)_ayBtn194.onclick=()=>{try{w.style.display='none'}catch(e){}try{ayOpen()}catch(eAy194){}};/* v194-şablon: Ayarlar butonu — Üye Hesabım penceresini kapat, 2. resimdeki Ayarlar penceresini aç */
 h76Tab('pro');w.style.display='flex'}
 fonksiyon h76Tab(t){const w=document.getElementById('hesov76');if(!w)return;const B=document.getElementById('hesbody76');if(!B)return;
 w.querySelectorAll('#hestabs76 button').forEach(b=>b.classList.toggle('on',b.dataset.h76==t));
